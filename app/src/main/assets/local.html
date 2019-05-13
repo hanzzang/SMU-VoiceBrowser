@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>숙명여자대학교 보이스 브라우져</title>
+    <style>
+    table.type05 {
+        border-collapse: separate;
+        border-spacing: 1px;
+        text-align: left;
+        line-height: 1.5;
+        border-top: 1px solid #ccc;
+        margin: 20px 10px;
+    }
+    table.type05 th {
+        width: 150px;
+        padding: 10px;
+        font-weight: bold;
+        vertical-align: top;
+        border-bottom: 1px solid #ccc;
+        background: #efefef;
+    }
+    table.type05 td {
+        width: 350px;
+        padding: 10px;
+        vertical-align: top;
+        border-bottom: 1px solid #ccc;
+    }
+    </style>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+<body>
+<p>숙명여자대학교 - 시각장애인을 위한 음성 브라우저 테스트 페이지</p>
+<input type="button" value="내부 함수 호출 Interface" onClick="showAndroidToast('안드로이드 인터페이스 내부 함수 호출')" />
+<h2>브라우저에서 MathML 표현하기(with MathJax)</h2>
+<p>삼각함수:</p>
+<math>
+    <mrow>
+        <mi>x</mi>
+        <mo>=</mo>
+        <mfrac>
+            <mrow>
+                <mo>-</mo>
+                <mi>b</mi>
+                <mo>&PlusMinus;</mo>
+                <msqrt>
+                    <mrow>
+                        <msup>
+                            <mi>b</mi>
+                            <mn>2</mn>
+                        </msup>
+                        <mo>-</mo>
+                        <mrow>
+                            <mn>4</mn>
+                            <mo>&InvisibleTimes;</mo>
+                            <mi>a</mi>
+                            <mo>&InvisibleTimes;</mo>
+                            <mi>c</mi>
+                        </mrow>
+                    </mrow>
+                </msqrt>
+            </mrow>
+            <mrow>
+                <mn>2</mn>
+                <mo>&InvisibleTimes;</mo>
+                <mi>a</mi>
+            </mrow>
+        </mfrac>
+    </mrow>
+</math>
+<p>샘플 테이블입니다.</p>
+<table class="type05">
+    <tr>
+        <th scope="row">첫 번째 항목명</th>
+        <th scope="row">두 번째 항목명</th>
+        <th scope="row">세 번째 항목명</th>
+    </tr>
+    <tr>
+        <td>첫 번째 내용이 들어갑니다.</td>
+        <td>두 번째 내용이 들어갑니다.</td>
+        <td>세 번째 내용이 들어갑니다.</td>
+    </tr>
+</table>
+
+<script type="text/javascript">
+    function showAndroidToast(toast) {
+        SMUJSInterface.showToast(toast);
+    }
+</script>
+</body>
+</html>

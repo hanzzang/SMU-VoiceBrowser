@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_dialog"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dialog_low"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:weightSum="1">
+
+        <CheckBox
+            android:id="@+id/cb_zoom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:buttonTint="@color/colorOldBack"
+            android:text="확대모드"
+            android:textColor="@color/colorOldBack"
+            android:textSize="30sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:weightSum="1">
+
+        <CheckBox
+            android:id="@+id/cb_tts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:buttonTint="@color/colorOldBack"
+            android:text="음성모드"
+            android:textColor="@color/colorOldBack"
+            android:textSize="30sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:weightSum="1">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_choice_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:clickable="true"
+            app:backgroundTint="@color/colorOldBack"
+            app:srcCompat="@drawable/ok" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_choice_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:clickable="true"
+            app:backgroundTint="@color/colorOldBack"
+            app:srcCompat="@drawable/cancel" />
+    </LinearLayout>
+
+    <!--   <View
+            android:id="@+id/target_view"
+            android:background="@color/colorBlackTransparency"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="top"
+            android:visibility="visible"/>-->
+
+
+</LinearLayout>
