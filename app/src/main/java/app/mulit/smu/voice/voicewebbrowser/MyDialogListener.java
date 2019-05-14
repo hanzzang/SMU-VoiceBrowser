@@ -5,5 +5,5 @@ package app.mulit.smu.voice.voicewebbrowser;
  */
 
 public interface MyDialogListener {
-    public void onMenuClicked(int menu);
+    public void onMenuClicked(String modeset);
 }

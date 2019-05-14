@@ -53,14 +53,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     Button btn_url;
     String link;
+    String nowlink;
     WebView webView;
     EditText et_url;
     ProgressBar progressBar;
 
     //
     FloatingActionButton fab;
-    //CustomDialog cd;
-    int mode;
+    String mode;
     private int requestName;
     CustomDialog dialog;
 
@@ -217,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //setSupportActionBar(toolbar);
 
         // 전역변수
-        mode = 0;
+        mode = "main";
         mContext = this;
 
         btn_url = (Button) findViewById(R.id.btn_url);
@@ -263,9 +263,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
 
-        //
-        //cd = new CustomDialog(this);
-
 
 /*        WindowManager.LayoutParams wm = cd.getWindow().getAttributes();  //다이얼로그의 높이 너비 설정하기위해
         wm.copyFrom(cd.getWindow().getAttributes());  //여기서 설정한값을 그대로 다이얼로그에 넣겠다는의미
@@ -296,85 +293,85 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.fab:
-                if(mode==0) {
+                if(mode=="main") {
                     requestName = R.layout.menu_main;
                     dialog = new CustomDialog(this, requestName);
                     dialog.setDialogListener(new MyDialogListener() {  // MyDialogListener 를 구현
                         @Override
-                        public void onMenuClicked(int menu){
-                            mode = menu;
+                        public void onMenuClicked(String modeset){
+                            mode = modeset;
                         }
                     });
                     Toast.makeText(getApplicationContext(), "기본 메뉴 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                     dialog.show();
                     break;
-                } else if(mode==1) {
+                } else if(mode=="choice") {
                     requestName = R.layout.menu_choice;
                     dialog = new CustomDialog(this, requestName);
                     dialog.setDialogListener(new MyDialogListener() {  // MyDialogListener 를 구현
                         @Override
-                        public void onMenuClicked(int menu){
-                            mode = menu;
+                        public void onMenuClicked(String modeset){
+                            mode = modeset;
                         }
                     });
                     Toast.makeText(getApplicationContext(), "선택 메뉴 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                     dialog.show();
                     break;
-                } else if(mode==2) {
+                } else if(mode=="setting") {
                     requestName = R.layout.menu_setting;
                     dialog = new CustomDialog(this, requestName);
                     dialog.setDialogListener(new MyDialogListener() {  // MyDialogListener 를 구현
                         @Override
-                        public void onMenuClicked(int menu){
-                            mode = menu;
+                        public void onMenuClicked(String modeset){
+                            mode = modeset;
                         }
                     });
                     Toast.makeText(getApplicationContext(), "사용자 설정 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                     dialog.show();
                     break;
-                } else if(mode==3) {
+                } else if(mode=="bookmark") {
                     requestName = R.layout.menu_bookmark;
                     dialog = new CustomDialog(this, requestName);
                     dialog.setDialogListener(new MyDialogListener() {  // MyDialogListener 를 구현
                         @Override
-                        public void onMenuClicked(int menu){
-                            mode = menu;
+                        public void onMenuClicked(String modeset){
+                            mode = modeset;
                         }
                     });
                     Toast.makeText(getApplicationContext(), "즐겨찾기 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                     dialog.show();
                     break;
-                } else if(mode==4) {
+                } else if(mode=="zoomtts") {
                     requestName = R.layout.menu_zoomtts;
                     dialog = new CustomDialog(this, requestName);
                     dialog.setDialogListener(new MyDialogListener() {  // MyDialogListener 를 구현
                         @Override
-                        public void onMenuClicked(int menu){
-                            mode = menu;
+                        public void onMenuClicked(String modeset){
+                            mode = modeset;
                         }
                     });
                     Toast.makeText(getApplicationContext(), "확대 음성 메뉴 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                     dialog.show();
                     break;
-                } else if(mode==5) {
+                } else if(mode=="tts") {
                     requestName = R.layout.menu_tts;
                     dialog = new CustomDialog(this, requestName);
                     dialog.setDialogListener(new MyDialogListener() {  // MyDialogListener 를 구현
                         @Override
-                        public void onMenuClicked(int menu){
-                            mode = menu;
+                        public void onMenuClicked(String modeset){
+                            mode = modeset;
                         }
                     });
                     Toast.makeText(getApplicationContext(), "음성 메뉴 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                     dialog.show();
                     break;
-                } else if(mode==6) {
+                } else if(mode=="zoom") {
                     requestName = R.layout.menu_zoom;
                     dialog = new CustomDialog(this, requestName);
                     dialog.setDialogListener(new MyDialogListener() {  // MyDialogListener 를 구현
                         @Override
-                        public void onMenuClicked(int menu){
-                            mode = menu;
+                        public void onMenuClicked(String modeset){
+                            mode = modeset;
                         }
                     });
                     Toast.makeText(getApplicationContext(), "확대 메뉴 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
@@ -464,14 +461,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         webView.addJavascriptInterface(new JavaScriptInterface(this), "SMUJSInterface");
 
         webView.loadUrl("http://www.sookmyung.ac.kr");
+        //nowlink = webView.getUrl();
+        //et_url.setText(nowlink);
     }
 
     public void previous(){
         webView.goBack();
+        //nowlink= webView.getUrl();
+        //et_url.setText(nowlink);
     }
 
     public void next(){
         webView.goForward();
+        //nowlink = webView.getUrl();
+        //et_url.setText(nowlink);
     }
 
     @Override

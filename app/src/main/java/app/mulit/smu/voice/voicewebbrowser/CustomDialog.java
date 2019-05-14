@@ -10,7 +10,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.view.Window;
 import android.webkit.WebSettings;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -33,8 +35,9 @@ public class CustomDialog extends Dialog implements View.OnClickListener{
 
     FloatingActionButton fab_mode_back, fab_mode_cancel;
     FloatingActionButton fab_zoomin, fab_zoomout, fab_reversal;
-
     FloatingActionButton fab_play, fab_pause, fab_stop;
+    EditText et_repeat, et_speed;
+    Button btn_repeat_minus, btn_repeat_plus, btn_speed_minus, btn_speed_plus;
 
     int layoutName;
 
@@ -96,6 +99,12 @@ public class CustomDialog extends Dialog implements View.OnClickListener{
         fab_zoomout = (FloatingActionButton) findViewById(R.id.fab_zoomout);
         fab_reversal = (FloatingActionButton) findViewById(R.id.fab_reversal);
         // 음성모드
+        et_repeat = (EditText) findViewById(R.id.et_repeat);
+        et_speed = (EditText) findViewById(R.id.et_speed);
+        btn_repeat_minus = (Button) findViewById(R.id.btn_repeat_minus);
+        btn_repeat_plus = (Button) findViewById(R.id.btn_repeat_plus);
+        btn_speed_minus = (Button) findViewById(R.id.btn_speed_minus);
+        btn_speed_plus = (Button) findViewById(R.id.btn_speed_plus);
         fab_play = (FloatingActionButton) findViewById(R.id.fab_play);
         fab_pause = (FloatingActionButton) findViewById(R.id.fab_pause);
         fab_stop = (FloatingActionButton) findViewById(R.id.fab_stop);
@@ -135,7 +144,7 @@ public class CustomDialog extends Dialog implements View.OnClickListener{
                 rb_low.setTextSize(20);
                 rb_old.setTextSize(20);
                 rb_basic.setTextSize(20);
-                dialogListener.onMenuClicked(0);
+                dialogListener.onMenuClicked("main");
             }
             radioGroup.setOnCheckedChangeListener(radioGroupButtonChangeListener);
         } else if(layoutName==R.layout.menu_bookmark) {
@@ -169,71 +178,71 @@ public class CustomDialog extends Dialog implements View.OnClickListener{
         switch (v.getId()){
             case R.id.fab_choice:
                 Toast.makeText(getContext(),"fab_choice 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
-                dialogListener.onMenuClicked(1);
+                dialogListener.onMenuClicked("choice");
                 dismiss();
                 break;
             case R.id.fab_setting:
                 Toast.makeText(getContext(),"fab_setting 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
-                dialogListener.onMenuClicked(2);
+                dialogListener.onMenuClicked("setting");
                 dismiss();
                 break;
             case R.id.fab_bookmark:
                 Toast.makeText(getContext(),"fab_bookmark 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
-                dialogListener.onMenuClicked(0);
+                dialogListener.onMenuClicked("main");
                 dismiss();
                 break;
             case R.id.fab_transform:
                 Toast.makeText(getContext(),"fab_transform 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
-                dialogListener.onMenuClicked(0);
+                dialogListener.onMenuClicked("main");
                 dismiss();
                 break;
             case R.id.fab_previous:
                 Toast.makeText(getContext(),"fab_previous 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                 ((MainActivity)MainActivity.mContext).previous();
-                dialogListener.onMenuClicked(0);
+                dialogListener.onMenuClicked("main");
                 dismiss();
                 break;
             case R.id.fab_home:
                 Toast.makeText(getContext(),"fab_home 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                 ((MainActivity)MainActivity.mContext).home();
-                dialogListener.onMenuClicked(0);
+                dialogListener.onMenuClicked("main");
                 dismiss();
                 break;
             case R.id.fab_next:
                 Toast.makeText(getContext(),"fab_next 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                 ((MainActivity)MainActivity.mContext).next();
-                dialogListener.onMenuClicked(0);
+                dialogListener.onMenuClicked("main");
                 dismiss();
                 break;
             case R.id.fab_choice_ok:
                 if(cb_zoom.isChecked() && cb_tts.isChecked()){ // 확대음성
                     Toast.makeText(getContext(),"확대 음성 모드입니다.", Toast.LENGTH_LONG).show();
-                    dialogListener.onMenuClicked(4);
+                    dialogListener.onMenuClicked("zoomtts");
                 } else if(cb_tts.isChecked() && !(cb_zoom.isChecked())){ // 음성
                     Toast.makeText(getContext(),"음성 모드입니다.", Toast.LENGTH_LONG).show();
-                    dialogListener.onMenuClicked(5);
+                    dialogListener.onMenuClicked("tts");
                 } else if(!(cb_tts.isChecked()) && cb_zoom.isChecked()){ //확대
                     Toast.makeText(getContext(),"확대 모드입니다.", Toast.LENGTH_LONG).show();
-                    dialogListener.onMenuClicked(6);
+                    dialogListener.onMenuClicked("zoom");
                 } else{
                     Toast.makeText(getContext(),"모드를 체크하세요.", Toast.LENGTH_LONG).show();
-                    dialogListener.onMenuClicked(1);
+                    dialogListener.onMenuClicked("choice");
                 }
                 dismiss();
                 break;
             case R.id.fab_choice_cancel:
                 Toast.makeText(getContext(),"fab_choice_cancel 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
-                dialogListener.onMenuClicked(0);
+                dialogListener.onMenuClicked("main");
                 dismiss();
                 break;
             case R.id.fab_mode_back:
                 Toast.makeText(getContext(),"fab_mode_back 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
-                dialogListener.onMenuClicked(1);
+                dialogListener.onMenuClicked("choice");
                 dismiss();
                 break;
             case R.id.fab_mode_cancel:
                 Toast.makeText(getContext(),"fab_mode_cancel 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
-                dialogListener.onMenuClicked(0);
+                dialogListener.onMenuClicked("main");
                 dismiss();
                 break;
             case R.id.fab_zoomin:
@@ -263,25 +272,6 @@ public class CustomDialog extends Dialog implements View.OnClickListener{
         }
     }
 
-/*    //라디오 버튼 클릭 리스너
-    RadioButton.OnClickListener radioButtonClickListener = new RadioButton.OnClickListener(){
-        @Override
-        public void onClick(View view) {
-            Toast.makeText(getContext(), "rb_low : "+rb_low.isChecked() + "rb_old : " +rb_old.isChecked() + "rb_basic : " +rb_basic.isChecked() , Toast.LENGTH_SHORT).show();
-        }
-    };
-
-    //라디오 그룹 클릭 리스너
-    RadioGroup.OnCheckedChangeListener radioGroupButtonChangeListener = new RadioGroup.OnCheckedChangeListener() {
-        @Override
-        public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
-            if(i == R.id.rb_low){
-                      Toast.makeText(MainActivity.this, "라디오 그룹 버튼1 눌렸습니다.", Toast.LENGTH_SHORT).show();
-            } else if(i == R.id.rg_btn2){
-                  Toast.makeText(MainActivity.this, "라디오 그룹 버튼2 눌렸습니다.", Toast.LENGTH_SHORT).show();
-            }
-          }
-    };*/
     RadioGroup.OnCheckedChangeListener radioGroupButtonChangeListener = new RadioGroup.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -312,7 +302,7 @@ public class CustomDialog extends Dialog implements View.OnClickListener{
                     rb_low.setTextSize(20);
                     rb_old.setTextSize(20);
                     rb_basic.setTextSize(20);
-                    dialogListener.onMenuClicked(0);
+                    dialogListener.onMenuClicked("main");
                     break;
             }
         }
