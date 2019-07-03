@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ll_dialog"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/dialog_low"
     android:orientation="vertical"
@@ -47,8 +47,8 @@
 
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="10dp"
         android:background="@drawable/dialog_white"
@@ -71,7 +71,7 @@
                 android:gravity="center_horizontal"
                 android:text="반복"
                 android:textColor="@color/colorOldBack"
-                android:textSize="24sp" />
+                android:textSize="40sp" />
 
             <Button
                 android:id="@+id/btn_repeat_minus"
@@ -81,7 +81,7 @@
                 android:layout_weight="1"
                 android:background="@color/colorOldBack"
                 android:text="-"
-                android:textSize="24sp" />
+                android:textSize="30sp" />
 
 
             <EditText
@@ -93,7 +93,7 @@
                 android:gravity="center_horizontal"
                 android:text="0"
                 android:textColor="@color/colorOldBack"
-                android:textSize="24sp"
+                android:textSize="40sp"
                 android:ems="10"
                 android:inputType="number" />
 
@@ -105,7 +105,7 @@
                 android:layout_weight="1"
                 android:background="@color/colorOldBack"
                 android:text="+"
-                android:textSize="24sp" />
+                android:textSize="30sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -124,7 +124,7 @@
                 android:gravity="center_horizontal"
                 android:text="속도"
                 android:textColor="@color/colorOldBack"
-                android:textSize="24sp" />
+                android:textSize="40sp" />
 
             <Button
                 android:id="@+id/btn_speed_minus"
@@ -134,7 +134,7 @@
                 android:layout_weight="1"
                 android:background="@color/colorOldBack"
                 android:text="-"
-                android:textSize="24sp" />
+                android:textSize="30sp" />
 
 
             <EditText
@@ -146,7 +146,7 @@
                 android:gravity="center_horizontal"
                 android:text="0"
                 android:textColor="@color/colorOldBack"
-                android:textSize="24sp"
+                android:textSize="40sp"
                 android:ems="10"
                 android:inputType="number" />
 
@@ -158,7 +158,7 @@
                 android:layout_weight="1"
                 android:background="@color/colorOldBack"
                 android:text="+"
-                android:textSize="24sp" />
+                android:textSize="30sp" />
         </LinearLayout>
 
     </LinearLayout>

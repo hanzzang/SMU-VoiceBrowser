@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+import static app.mulit.smu.voice.voicewebbrowser.MainActivity.webView;
 
 public class CustomDialog extends Dialog implements View.OnClickListener{
     private MyDialogListener dialogListener;
@@ -179,6 +180,8 @@ public class CustomDialog extends Dialog implements View.OnClickListener{
             case R.id.fab_choice:
                 Toast.makeText(getContext(),"fab_choice 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                 dialogListener.onMenuClicked("choice");
+                webView.loadUrl("javascript:addStyle();");
+                //webView.loadUrl("javascript:window.SMUJSInterface.getWebPageBodyText(document.getElementsByTagName('body')[0].innerText);");
                 dismiss();
                 break;
             case R.id.fab_setting:
@@ -218,17 +221,21 @@ public class CustomDialog extends Dialog implements View.OnClickListener{
                 if(cb_zoom.isChecked() && cb_tts.isChecked()){ // 확대음성
                     Toast.makeText(getContext(),"확대 음성 모드입니다.", Toast.LENGTH_LONG).show();
                     dialogListener.onMenuClicked("zoomtts");
+                    dismiss();
                 } else if(cb_tts.isChecked() && !(cb_zoom.isChecked())){ // 음성
                     Toast.makeText(getContext(),"음성 모드입니다.", Toast.LENGTH_LONG).show();
                     dialogListener.onMenuClicked("tts");
+                    dismiss();
+                    webView.loadUrl("javascript:startTTS();");
                 } else if(!(cb_tts.isChecked()) && cb_zoom.isChecked()){ //확대
                     Toast.makeText(getContext(),"확대 모드입니다.", Toast.LENGTH_LONG).show();
                     dialogListener.onMenuClicked("zoom");
+                    dismiss();
                 } else{
                     Toast.makeText(getContext(),"모드를 체크하세요.", Toast.LENGTH_LONG).show();
                     dialogListener.onMenuClicked("choice");
+                    dismiss();
                 }
-                dismiss();
                 break;
             case R.id.fab_choice_cancel:
                 Toast.makeText(getContext(),"fab_choice_cancel 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();

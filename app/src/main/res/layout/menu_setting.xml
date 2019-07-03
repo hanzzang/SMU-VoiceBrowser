@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/dialog_low"
     android:orientation="vertical"
@@ -18,7 +18,7 @@
         android:gravity="center_horizontal"
         android:text="사용자 유형"
         android:textColor="@color/colorOldBack"
-        android:textSize="30sp" />
+        android:textSize="40sp" />
 
     <RadioGroup
         android:id="@+id/radioGroup"
@@ -36,7 +36,7 @@
             android:buttonTint="@color/colorOldBack"
             android:text="저시력"
             android:textColor="@color/colorOldBack"
-            android:textSize="36sp" />
+            android:textSize="40sp" />
 
         <RadioButton
             android:id="@+id/rb_old"
@@ -47,7 +47,7 @@
             android:buttonTint="@color/colorOldBack"
             android:text="노안"
             android:textColor="@color/colorOldBack"
-            android:textSize="36sp" />
+            android:textSize="40sp" />
 
         <RadioButton
             android:id="@+id/rb_basic"
@@ -58,7 +58,7 @@
             android:buttonTint="@color/colorOldBack"
             android:text="일반"
             android:textColor="@color/colorOldBack"
-            android:textSize="36sp" />
+            android:textSize="40sp" />
     </RadioGroup>
 
     <!--   <View

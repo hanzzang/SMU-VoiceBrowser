@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ll_dialog"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/dialog_low"
     android:orientation="vertical"
@@ -24,7 +24,7 @@
             android:buttonTint="@color/colorOldBack"
             android:text="확대모드"
             android:textColor="@color/colorOldBack"
-            android:textSize="30sp" />
+            android:textSize="40sp" />
 
     </LinearLayout>
 
@@ -43,7 +43,7 @@
             android:buttonTint="@color/colorOldBack"
             android:text="음성모드"
             android:textColor="@color/colorOldBack"
-            android:textSize="30sp" />
+            android:textSize="40sp" />
 
     </LinearLayout>
 

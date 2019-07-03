@@ -1,3 +1,5 @@
+var tagArray = new Array;
+
 // 해당 원본 테그 내용을 TTS가 읽을 수 있는 내용으로 변경
 function replaceTableTagHtml() {
     var tagName = 'table';
@@ -25,4 +27,67 @@ function replaceMathMLTagHtml() {
 function getTagCount(tagName)
 {
     return document.getElementsByTagName(tagName).length;
+}
+
+// p태그 뽑아서 저장
+function getPTag() {
+    var tagName = 'p';
+    try {
+        for(var idx = 0; idx < document.getElementsByTagName(tagName).length; idx++) {
+            var text = document.getElementsByTagName(tagName)[idx];
+            var textContent = text.innerText;
+            tagArray.push(textContent);
+            //var textContent = window.SMUJSInterface.getWebPageBodyText(document.getElementsByTagName(tagName)[idx].innerText);
+            //alert(textContent);
+            //document.getElementsByTagName(tagName)[idx].outerHTML = textContent;
+        }
+        //alert(tagArray);
+    } catch(err) {
+    }
+}
+
+// 스타일 적용
+function addStyle() {
+	var styles = 'p { background: yellow; color: black }';
+	var css = document.createElement('style');
+	css.type = 'text/css';
+
+	if (css.styleSheet)
+		css.styleSheet.cssText = styles;
+	else
+	    css.appendChild(document.createTextNode(styles));
+
+    var tagName = 'p';
+    try {
+        for(var idx = 0; idx < document.getElementsByTagName(tagName).length; idx++) {
+            var text = document.getElementsByTagName(tagName)[idx];
+            // 하이라이팅
+            text.appendChild(css);
+            // 태그 값 가져오기
+            var textContent = text.innerText;
+            // 태그 값 저장
+            tagArray.push(textContent);
+        }
+        //alert(tagArray);
+    } catch(err) {
+    }
+}
+
+// TTS 시작
+function startTTS(){
+    var tagName = 'p';
+        try {
+            for(var idx = 0; idx < document.getElementsByTagName(tagName).length; idx++) {
+                var textContent = window.SMUJSInterface.getWebPageBodyText(document.getElementsByTagName(tagName)[idx].innerText);
+                //document.getElementsByTagName(tagName)[idx].outerHTML = textContent;
+            }
+        } catch(err) {
+        }
+}
+
+//webView.loadUrl("javascript:window.SMUJSInterface.getWebPageBodyText(document.getElementsByTagName('body')[0].innerText);");
+
+function touchEndHandler(e){
+    var elem = e.changedTouches.item(0);
+    console.log($(elem).text());
 }
