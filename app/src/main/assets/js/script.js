@@ -47,8 +47,8 @@ function getPTag() {
 }
 
 // 스타일 적용
-function addStyle() {
-	var styles = 'p { background: yellow; color: black }';
+function addStyle(tagName) {
+	var styles = tagName + '{ background: yellow; color: black }';
 	var css = document.createElement('style');
 	css.type = 'text/css';
 
@@ -57,7 +57,6 @@ function addStyle() {
 	else
 	    css.appendChild(document.createTextNode(styles));
 
-    var tagName = 'p';
     try {
         for(var idx = 0; idx < document.getElementsByTagName(tagName).length; idx++) {
             var text = document.getElementsByTagName(tagName)[idx];
@@ -90,4 +89,23 @@ function startTTS(){
 function touchEndHandler(e){
     var elem = e.changedTouches.item(0);
     console.log($(elem).text());
+}
+
+
+
+// body에 터치이벤트 추가: 영역 제한을 여기서 해버리면? 아예 body영역에서만 적용되는 터치 이벤트!
+function addEvent(){
+    var elm = document.getElementsByTagName("body")[0];
+    elm.addEventListener("touchstart", handleStart, true);
+}
+
+// 터치된 태그 이름 출력
+// ?? 터치 스크롤도 적용되네; 막아야겠다. 막을 수 있나?
+// ?? input 태그는 왜 계속 나오지 실제 코드에는 input 태그 없는데
+function handleStart(evt) {
+    var x = event.targetTouches[0].target.tagName;
+    addStyle(x);
+
+    var y = event.targetTouches[0].target;
+    alert(x + " / " + y);
 }

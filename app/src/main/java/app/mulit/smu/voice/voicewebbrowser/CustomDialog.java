@@ -191,6 +191,7 @@ public class CustomDialog extends Dialog implements View.OnClickListener{
                 break;
             case R.id.fab_bookmark:
                 Toast.makeText(getContext(),"fab_bookmark 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
+                webView.loadUrl("javascript:addEvent();");
                 dialogListener.onMenuClicked("main");
                 dismiss();
                 break;
