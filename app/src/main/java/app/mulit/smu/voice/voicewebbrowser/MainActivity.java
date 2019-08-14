@@ -209,6 +209,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     };
 
+    public void lowPitchTTS() {
+        mSpeckOut.setPitch(0.5f);         // 음성 톤을 0.5배 설정
+    }
+
+    public void normalPitchTTS() {
+        mSpeckOut.setPitch(1.0f);         // 음성 톤을 기본으로 설정
+    }
+
+    public void highPitchTTS() {
+        mSpeckOut.setPitch(2.0f);         // 음성 톤을 2.0배 설정
+    }
+
+    public void lowRateTTS() {
+        mSpeckOut.setSpeechRate(0.5f);    // 읽는 속도를 0.5빠르기로 설정
+    }
+
+    public void normalRateTTS() {
+        mSpeckOut.setSpeechRate(1.0f);    // 읽는 속도를 기본으로 설정
+    }
+
+    public void highRateTTS() {
+        mSpeckOut.setSpeechRate(2.0f);    // 읽는 속도를 2.0배 빠르기로 설정
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -229,7 +253,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         loadResource(webView, LOCAL_RESOURCE);
 
-/*        FloatingActionButton fab0 = (FloatingActionButton) findViewById(R.id.fab0);
+/*      대표님이 준 코드에 있던 원래 버튼들
+        FloatingActionButton fab0 = (FloatingActionButton) findViewById(R.id.fab0);
         fab0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -258,17 +283,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
-
-        /*DisplayMetrics dm = getApplicationContext().getResources().getDisplayMetrics(); //디바이스 화면크기를 구하기위해
-        int width = dm.widthPixels; //디바이스 화면 너비
-        int height = dm.heightPixels; //디바이스 화면 높이
-
-        WindowManager.LayoutParams wm = dialog.getWindow().getAttributes();  //다이얼로그의 높이 너비 설정하기위해
-        wm.copyFrom(dialog.getWindow().getAttributes());  //여기서 설정한값을 그대로 다이얼로그에 넣겠다는의미
-        wm.width = width / 2;  //화면 너비의 절반
-        wm.height = height / 2;  //화면 높이의 절반*/
-
-
 
 
 /*        fab.setOnClickListener(new View.OnClickListener() {

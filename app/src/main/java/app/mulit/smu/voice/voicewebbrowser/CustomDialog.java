@@ -38,7 +38,7 @@ public class CustomDialog extends Dialog implements View.OnClickListener{
     FloatingActionButton fab_zoomin, fab_zoomout, fab_reversal;
     FloatingActionButton fab_play, fab_pause, fab_stop;
     EditText et_repeat, et_speed;
-    Button btn_repeat_minus, btn_repeat_plus, btn_speed_minus, btn_speed_plus;
+    Button btn_pitch_low, btn_pitch_normal, btn_pitch_high, btn_rate_low, btn_rate_normal, btn_rate_high;
 
     int layoutName;
 
@@ -57,7 +57,7 @@ public class CustomDialog extends Dialog implements View.OnClickListener{
             public void onClick(View view) {
                 Toast.makeText(getContext(),"fab_choice 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                 dialogListener.onMenuClicked(1);
-                dismiss();   //다이얼로그를 닫는 메소드입니다.
+                dismiss();   //다이얼로그를 닫는 메소드
             }
         });*/
     }
@@ -95,17 +95,24 @@ public class CustomDialog extends Dialog implements View.OnClickListener{
         // 모드
         fab_mode_back = (FloatingActionButton) findViewById(R.id.fab_mode_back);
         fab_mode_cancel = (FloatingActionButton) findViewById(R.id.fab_mode_cancel);
+
         // 확대모드
         fab_zoomin = (FloatingActionButton) findViewById(R.id.fab_zoomin);
         fab_zoomout = (FloatingActionButton) findViewById(R.id.fab_zoomout);
         fab_reversal = (FloatingActionButton) findViewById(R.id.fab_reversal);
+
         // 음성모드
         et_repeat = (EditText) findViewById(R.id.et_repeat);
         et_speed = (EditText) findViewById(R.id.et_speed);
-        btn_repeat_minus = (Button) findViewById(R.id.btn_repeat_minus);
-        btn_repeat_plus = (Button) findViewById(R.id.btn_repeat_plus);
-        btn_speed_minus = (Button) findViewById(R.id.btn_speed_minus);
-        btn_speed_plus = (Button) findViewById(R.id.btn_speed_plus);
+
+        btn_pitch_low = (Button) findViewById(R.id.btn_pitch_low);
+        btn_pitch_normal = (Button) findViewById(R.id.btn_pitch_normal);
+        btn_pitch_high = (Button) findViewById(R.id.btn_pitch_high);
+
+        btn_rate_low = (Button) findViewById(R.id.btn_rate_low);
+        btn_rate_normal = (Button) findViewById(R.id.btn_rate_normal);
+        btn_rate_high = (Button) findViewById(R.id.btn_rate_high);
+
         fab_play = (FloatingActionButton) findViewById(R.id.fab_play);
         fab_pause = (FloatingActionButton) findViewById(R.id.fab_pause);
         fab_stop = (FloatingActionButton) findViewById(R.id.fab_stop);
@@ -157,12 +164,24 @@ public class CustomDialog extends Dialog implements View.OnClickListener{
             fab_mode_back.setOnClickListener(this);
             fab_mode_cancel.setOnClickListener(this);
         } else if(layoutName==R.layout.menu_tts) {
+            btn_pitch_low.setOnClickListener(this);
+            btn_pitch_normal.setOnClickListener(this);
+            btn_pitch_high.setOnClickListener(this);
+            btn_rate_low.setOnClickListener(this);
+            btn_rate_normal.setOnClickListener(this);
+            btn_rate_high.setOnClickListener(this);
             fab_play.setOnClickListener(this);
             fab_pause.setOnClickListener(this);
             fab_stop.setOnClickListener(this);
             fab_mode_back.setOnClickListener(this);
             fab_mode_cancel.setOnClickListener(this);
         } else if(layoutName==R.layout.menu_zoomtts) {
+            btn_pitch_low.setOnClickListener(this);
+            btn_pitch_normal.setOnClickListener(this);
+            btn_pitch_high.setOnClickListener(this);
+            btn_rate_low.setOnClickListener(this);
+            btn_rate_normal.setOnClickListener(this);
+            btn_rate_high.setOnClickListener(this);
             fab_zoomin.setOnClickListener(this);
             fab_zoomout.setOnClickListener(this);
             fab_reversal.setOnClickListener(this);
@@ -180,8 +199,7 @@ public class CustomDialog extends Dialog implements View.OnClickListener{
             case R.id.fab_choice:
                 Toast.makeText(getContext(),"fab_choice 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                 dialogListener.onMenuClicked("choice");
-                webView.loadUrl("javascript:addStyle();");
-                //webView.loadUrl("javascript:window.SMUJSInterface.getWebPageBodyText(document.getElementsByTagName('body')[0].innerText);");
+                webView.loadUrl("javascript:initChoice();");
                 dismiss();
                 break;
             case R.id.fab_setting:
@@ -191,7 +209,6 @@ public class CustomDialog extends Dialog implements View.OnClickListener{
                 break;
             case R.id.fab_bookmark:
                 Toast.makeText(getContext(),"fab_bookmark 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
-                webView.loadUrl("javascript:addEvent();");
                 dialogListener.onMenuClicked("main");
                 dismiss();
                 break;
@@ -222,15 +239,19 @@ public class CustomDialog extends Dialog implements View.OnClickListener{
                 if(cb_zoom.isChecked() && cb_tts.isChecked()){ // 확대음성
                     Toast.makeText(getContext(),"확대 음성 모드입니다.", Toast.LENGTH_LONG).show();
                     dialogListener.onMenuClicked("zoomtts");
+                    webView.loadUrl("javascript:startTTS();");
+                    webView.loadUrl("javascript:stopChoice();");
                     dismiss();
                 } else if(cb_tts.isChecked() && !(cb_zoom.isChecked())){ // 음성
                     Toast.makeText(getContext(),"음성 모드입니다.", Toast.LENGTH_LONG).show();
                     dialogListener.onMenuClicked("tts");
-                    dismiss();
                     webView.loadUrl("javascript:startTTS();");
+                    webView.loadUrl("javascript:stopChoice();");
+                    dismiss();
                 } else if(!(cb_tts.isChecked()) && cb_zoom.isChecked()){ //확대
                     Toast.makeText(getContext(),"확대 모드입니다.", Toast.LENGTH_LONG).show();
                     dialogListener.onMenuClicked("zoom");
+                    webView.loadUrl("javascript:stopChoice();");
                     dismiss();
                 } else{
                     Toast.makeText(getContext(),"모드를 체크하세요.", Toast.LENGTH_LONG).show();
@@ -241,18 +262,54 @@ public class CustomDialog extends Dialog implements View.OnClickListener{
             case R.id.fab_choice_cancel:
                 Toast.makeText(getContext(),"fab_choice_cancel 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                 dialogListener.onMenuClicked("main");
+                webView.loadUrl("javascript:finalizeChoice();");
                 dismiss();
                 break;
             case R.id.fab_mode_back:
                 Toast.makeText(getContext(),"fab_mode_back 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                 dialogListener.onMenuClicked("choice");
+                webView.loadUrl("javascript:initChoice();");
                 dismiss();
                 break;
             case R.id.fab_mode_cancel:
                 Toast.makeText(getContext(),"fab_mode_cancel 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                 dialogListener.onMenuClicked("main");
+                webView.loadUrl("javascript:finalizeChoice();");
                 dismiss();
                 break;
+
+
+            case R.id.btn_pitch_low:
+                Toast.makeText(getContext(),"btn_pitch_low 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
+                ((MainActivity)MainActivity.mContext).lowPitchTTS();
+                dismiss();
+                break;
+            case R.id.btn_pitch_normal:
+                Toast.makeText(getContext(),"btn_pitch_normal 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
+                ((MainActivity)MainActivity.mContext).normalPitchTTS();
+                dismiss();
+                break;
+            case R.id.btn_pitch_high:
+                Toast.makeText(getContext(),"btn_pitch_high 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
+                ((MainActivity)MainActivity.mContext).highPitchTTS();
+                dismiss();
+                break;
+            case R.id.btn_rate_low:
+                Toast.makeText(getContext(),"btn_rate_low 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
+                ((MainActivity)MainActivity.mContext).lowRateTTS();
+                dismiss();
+                break;
+            case R.id.btn_rate_normal:
+                Toast.makeText(getContext(),"btn_rate_normal 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
+                ((MainActivity)MainActivity.mContext).normalRateTTS();
+                dismiss();
+                break;
+            case R.id.btn_rate_high:
+                Toast.makeText(getContext(),"btn_rate_high 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
+                ((MainActivity)MainActivity.mContext).highRateTTS();
+                dismiss();
+                break;
+
             case R.id.fab_zoomin:
                 Toast.makeText(getContext(),"fab_zoomin 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                 dismiss();
@@ -267,6 +324,7 @@ public class CustomDialog extends Dialog implements View.OnClickListener{
                 break;
             case R.id.fab_play:
                 Toast.makeText(getContext(),"fab_play 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
+                webView.loadUrl("javascript:startTTS();");
                 dismiss();
                 break;
             case R.id.fab_pause:
@@ -292,6 +350,7 @@ public class CustomDialog extends Dialog implements View.OnClickListener{
                     rb_low.setTextSize(36);
                     rb_old.setTextSize(36);
                     rb_basic.setTextSize(36);
+                    dialogListener.onMenuClicked("main");
                     break;
                 case R.id.rb_old:
                     ll_dialog.setBackgroundColor(Color.rgb(0, 255, 0));
@@ -301,6 +360,7 @@ public class CustomDialog extends Dialog implements View.OnClickListener{
                     rb_low.setTextSize(36);
                     rb_old.setTextSize(36);
                     rb_basic.setTextSize(36);
+                    dialogListener.onMenuClicked("main");
                     break;
                 case R.id.rb_basic:
                     ll_dialog.setBackgroundColor(Color.rgb(0, 0, 255));

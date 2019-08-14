@@ -1,5 +1,3 @@
-var tagArray = new Array;
-
 // 해당 원본 테그 내용을 TTS가 읽을 수 있는 내용으로 변경
 function replaceTableTagHtml() {
     var tagName = 'table';
@@ -29,83 +27,166 @@ function getTagCount(tagName)
     return document.getElementsByTagName(tagName).length;
 }
 
-// p태그 뽑아서 저장
-function getPTag() {
-    var tagName = 'p';
-    try {
-        for(var idx = 0; idx < document.getElementsByTagName(tagName).length; idx++) {
-            var text = document.getElementsByTagName(tagName)[idx];
-            var textContent = text.innerText;
-            tagArray.push(textContent);
-            //var textContent = window.SMUJSInterface.getWebPageBodyText(document.getElementsByTagName(tagName)[idx].innerText);
-            //alert(textContent);
-            //document.getElementsByTagName(tagName)[idx].outerHTML = textContent;
-        }
-        //alert(tagArray);
-    } catch(err) {
-    }
+
+////////////////////// 선택모드
+var targetArray = []; // target 담는 배열
+
+var bStartEvent = false; //touchstart 이벤트 발생 여부 플래그
+var bMoveEvent = false; //touchmove 이벤트 발생 여부 플래그
+
+htClickInfo = { //더블탭을 판단하기 위한 마지막 탭 이벤트의 정보 해시 테이블
+    sType : null,
+    nX : -1,
+    nY : -1,
+    nTime : 0
 }
 
-// 스타일 적용
-function addStyle(tagName) {
-	var styles = tagName + '{ background: yellow; color: black }';
-	var css = document.createElement('style');
-	css.type = 'text/css';
+var nDoubleTapDuration = 200; //더블탭을 판단하는 기준 시간(ms)
+var nTapThreshold = 5; //탭을 판단하는 거리
 
-	if (css.styleSheet)
-		css.styleSheet.cssText = styles;
-	else
-	    css.appendChild(document.createTextNode(styles));
+// 선택모드 이벤트 리스너
+function initChoice(){
+/*    document.addEventListener("touchstart", this.onStart.bind(this));
+    document.addEventListener("touchmove", this.onMove.bind(this));
+    document.addEventListener("touchend", this.onEnd.bind(this));*/
+    document.addEventListener("touchstart", onStart);
+    document.addEventListener("touchmove", onMove);
+    document.addEventListener("touchend", onEnd);
 
-    try {
-        for(var idx = 0; idx < document.getElementsByTagName(tagName).length; idx++) {
-            var text = document.getElementsByTagName(tagName)[idx];
-            // 하이라이팅
-            text.appendChild(css);
-            // 태그 값 가져오기
-            var textContent = text.innerText;
-            // 태그 값 저장
-            tagArray.push(textContent);
-        }
-        //alert(tagArray);
-    } catch(err) {
+    // a.href 링크 이동 방지인데 해제하는 법을 모름 흠.. 찾아보자
+    //$(document).on('click', 'a', function(event) {return false;});
+}
+
+function initClearInfo() {
+    htClickInfo.sType = null;
+}
+
+function onStart(e) {
+    bStartEvent = true;
+}
+
+function onMove(e) {
+    if(!bStartEvent) {
+        return; //touchstart 이벤트가 발생하지 않으면 처리하지 않는다.
     }
+    bMoveEvent = true; //touchmove 이벤트 발생 여부를 설정한다.
+}
+
+function onEnd(e) {
+    var nX;
+    var nY;
+    var targetTag;
+    var i;
+    var nTime;
+
+    //유효한 태그 찾기 - p, strong, span
+    for(i = 0; i<e.changedTouches.length;i++){
+        if(e.changedTouches[i].target.tagName.toLowerCase() == 'p' || e.changedTouches[i].target.tagName.toLowerCase() == 'strong' ||
+            e.changedTouches[i].target.tagName.toLowerCase() == 'span'){
+                nX = e.changedTouches[i].pageX;
+                nY = e.changedTouches[i].pageY;
+                targetTag = e.changedTouches[i].target;
+                nTime = e.timeStamp;
+                break;
+        }else if(i==e.changedTouches.length-1){ //터치 영역에 유효한 태그 없으면 탭 이벤트 정보를 초기화
+            initClearInfo();
+            bStartEvent = false;
+            bMoveEvent = false;
+        }else{
+            continue;
+        }
+    }
+
+    if(bStartEvent && !bMoveEvent) {
+        //이전 탭 이벤트와 시간 차이가 200ms 이하일 경우
+        if(htClickInfo.sType == "tap" && (nTime - htClickInfo.nTime) <= nDoubleTapDuration){
+            if( (Math.abs(htClickInfo.nX-nX) <= nTapThreshold)
+                 && (Math.abs(htClickInfo.nY-nY) <= nTapThreshold) ){   //더블탭으로 판단한다. (탭이 발생하지 않게 탭 발생 타이머 초기화한다.)
+                alert('double tap!');
+                clearTimeout(oTapEventTimer);
+            }
+        } else {
+            //탭 이벤트로 판단한다.
+            //현재 탭 이벤트들에 대한 정보를 업데이트한다.
+            var isTarget = targetArray.indexOf(targetTag);
+            if(isTarget != -1){ // 이미 선택한 태그라면
+                // 스타일 원래대로
+                targetTag.style.removeProperty('background');
+                targetTag.style.removeProperty('color');
+                // 배열에서 삭제
+                targetArray.splice(isTarget,1);
+            }else{ // 선택하지 않은 태그라면
+                // 배열에 추가
+                targetArray.push(targetTag);
+                // 하이라이팅
+                targetTag.style.background = 'yellow';
+                targetTag.style.color = 'black';
+
+                htClickInfo.sType = "tap";
+                htClickInfo.nX = nX;
+                htClickInfo.nY =nY;
+                htClickInfo.nTime = nTime;
+            }
+
+            //배열 확인
+            for (var prop in targetArray) {
+                console.log("---- " + prop + " = " + targetArray[prop] + " / " + targetArray[prop].tagName +" / " + targetArray[prop].innerText + " / " + targetArray[prop].style.background + " / " + targetArray[prop].style.color);
+            }
+        }
+    } else {
+        //탭 이벤트가 아니므로 탭 이벤트 정보를 초기화한다.
+        initClearInfo();
+    }
+
+    bStartEvent = false;
+    bMoveEvent = false;
 }
 
 // TTS 시작
 function startTTS(){
-    var tagName = 'p';
-        try {
-            for(var idx = 0; idx < document.getElementsByTagName(tagName).length; idx++) {
-                var textContent = window.SMUJSInterface.getWebPageBodyText(document.getElementsByTagName(tagName)[idx].innerText);
-                //document.getElementsByTagName(tagName)[idx].outerHTML = textContent;
-            }
-        } catch(err) {
+    try {
+        for (var prop in targetArray) {
+            var textContent = window.SMUJSInterface.getWebPageBodyText(targetArray[prop].innerText);
         }
+    } catch(err) {
+    }
 }
 
-//webView.loadUrl("javascript:window.SMUJSInterface.getWebPageBodyText(document.getElementsByTagName('body')[0].innerText);");
+// 선택 모드만 막기
+function stopChoice(){
+    bStartEvent = false;
+    bMoveEvent = false;
+/*    document.removeEventListener("touchstart", this.onStart.bind(this));
+    document.removeEventListener("touchmove", this.onMove.bind(this));
+    document.removeEventListener("touchend", this.onEnd.bind(this));*/
 
-function touchEndHandler(e){
-    var elem = e.changedTouches.item(0);
-    console.log($(elem).text());
+    //$(document).on('click', 'a', function(event) {return true;}); // a.href 링크 이동 방지 해제...?
+
+    document.removeEventListener("touchstart", onStart);
+    document.removeEventListener("touchmove", onMove);
+    document.removeEventListener("touchend", onEnd);
 }
 
+// 선택 모드 완전 종료
+function finalizeChoice(){
+    bStartEvent = false;
+    bMoveEvent = false;
+/*    document.removeEventListener("touchstart", this.onStart.bind(this));
+    document.removeEventListener("touchmove", this.onMove.bind(this));
+    document.removeEventListener("touchend", this.onEnd.bind(this));*/
 
+    //$(document).on('click', 'a', function(event) {return true;}); // a.href 링크 이동 방지 해제...?
 
-// body에 터치이벤트 추가: 영역 제한을 여기서 해버리면? 아예 body영역에서만 적용되는 터치 이벤트!
-function addEvent(){
-    var elm = document.getElementsByTagName("body")[0];
-    elm.addEventListener("touchstart", handleStart, true);
-}
+    // 스타일 원래대로
+    for (var prop in targetArray) {
+        targetArray[prop].style.removeProperty('background');
+        targetArray[prop].style.removeProperty('color');
+    }
 
-// 터치된 태그 이름 출력
-// ?? 터치 스크롤도 적용되네; 막아야겠다. 막을 수 있나?
-// ?? input 태그는 왜 계속 나오지 실제 코드에는 input 태그 없는데
-function handleStart(evt) {
-    var x = event.targetTouches[0].target.tagName;
-    addStyle(x);
+    // 배열 비우기
+    targetArray.splice(0,targetArray.length);
 
-    var y = event.targetTouches[0].target;
-    alert(x + " / " + y);
+    document.removeEventListener("touchstart", onStart);
+    document.removeEventListener("touchmove", onMove);
+    document.removeEventListener("touchend", onEnd);
 }
