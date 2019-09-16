@@ -43,7 +43,7 @@
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@color/colorOldBack"
-                android:text="-"
+                android:text="▼"
                 android:textSize="30sp" />
 
             <Button
@@ -63,7 +63,7 @@
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@color/colorOldBack"
-                android:text="+"
+                android:text="▲"
                 android:textSize="30sp" />
         </LinearLayout>
 
@@ -92,7 +92,7 @@
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@color/colorOldBack"
-                android:text="-"
+                android:text="▼"
                 android:textSize="30sp" />
 
             <Button
@@ -112,7 +112,7 @@
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@color/colorOldBack"
-                android:text="+"
+                android:text="▲"
                 android:textSize="30sp" />
         </LinearLayout>
 
@@ -163,7 +163,7 @@
         android:weightSum="1">
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_mode_back"
+            android:id="@+id/fab_tts_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
@@ -172,7 +172,7 @@
             app:srcCompat="@drawable/previous" />
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_mode_cancel"
+            android:id="@+id/fab_tts_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"

@@ -37,7 +37,7 @@ class SMUWebVieweClient extends WebViewClient {
         Toast.makeText(m_context, "Loaded this webpage [" + refreshCount + "] " +
                 "times in [" + interval + "] ms - HTML 분석 준비 완료", Toast.LENGTH_SHORT).show();
 
-        ((MainActivity) m_context).mSpeckOut.speak("웹 페이지 로딩 완료", TextToSpeech.QUEUE_FLUSH, null);
+        //((MainActivity) m_context).mSpeckOut.speak("웹 페이지 로딩 완료", TextToSpeech.QUEUE_FLUSH, null);
 
         injectScriptFile(view, "js/script.js");
     }

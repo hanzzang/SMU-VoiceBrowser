@@ -69,42 +69,38 @@
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
-                android:text="반복"
+                android:text="음성"
                 android:textColor="@color/colorOldBack"
                 android:textSize="40sp" />
 
             <Button
-                android:id="@+id/btn_repeat_minus"
+                android:id="@+id/btn_pitch_low"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@color/colorOldBack"
-                android:text="-"
+                android:text="▼"
                 android:textSize="30sp" />
 
-
-            <EditText
-                android:id="@+id/et_repeat"
-                android:layout_width="40dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:text="0"
-                android:textColor="@color/colorOldBack"
-                android:textSize="40sp"
-                android:ems="10"
-                android:inputType="number" />
-
             <Button
-                android:id="@+id/btn_repeat_plus"
+                android:id="@+id/btn_pitch_normal"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@color/colorOldBack"
-                android:text="+"
+                android:text="0"
+                android:textSize="30sp" />
+
+            <Button
+                android:id="@+id/btn_pitch_high"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@color/colorOldBack"
+                android:text="▲"
                 android:textSize="30sp" />
         </LinearLayout>
 
@@ -127,37 +123,33 @@
                 android:textSize="40sp" />
 
             <Button
-                android:id="@+id/btn_speed_minus"
+                android:id="@+id/btn_rate_low"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@color/colorOldBack"
-                android:text="-"
+                android:text="▼"
                 android:textSize="30sp" />
 
-
-            <EditText
-                android:id="@+id/et_speed"
-                android:layout_width="40dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:text="0"
-                android:textColor="@color/colorOldBack"
-                android:textSize="40sp"
-                android:ems="10"
-                android:inputType="number" />
-
             <Button
-                android:id="@+id/btn_speed_plus"
+                android:id="@+id/btn_rate_normal"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@color/colorOldBack"
-                android:text="+"
+                android:text="0"
+                android:textSize="30sp" />
+
+            <Button
+                android:id="@+id/btn_rate_high"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@color/colorOldBack"
+                android:text="▲"
                 android:textSize="30sp" />
         </LinearLayout>
 
@@ -208,7 +200,7 @@
         android:weightSum="1">
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_mode_back"
+            android:id="@+id/fab_zoom_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
@@ -217,7 +209,7 @@
             app:srcCompat="@drawable/previous" />
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_mode_cancel"
+            android:id="@+id/fab_zoom_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"

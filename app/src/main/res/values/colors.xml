@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorPrimary">#0D2D84</color>
+    <color name="colorPrimaryDark">#2060AA</color>
     <color name="colorAccent">#D81B60</color>
 
     <color name="colorLine">#FF0000</color>
@@ -9,6 +9,6 @@
     <color name="colorBlackTransparency">#66000000</color>
     <color name="colorOldBack">#FAFAFA</color>
     <color name="colorOldHighlight">#000000</color>
-    <color name="colorLowBack">#2E2E2E</color>
+    <color name="colorLowBack">#DD2E2E2E</color>
     <color name="colorLowHighlight">#FFFF00</color>
 </resources>

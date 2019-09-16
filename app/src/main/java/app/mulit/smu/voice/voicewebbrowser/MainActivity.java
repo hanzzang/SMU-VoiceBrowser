@@ -29,6 +29,15 @@ import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.MotionEvent;
+import android.widget.*;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+import android.view.ViewGroup;
+
 
 // Import Library for Speech Recognition
 import android.speech.RecognitionListener;
@@ -46,7 +55,7 @@ import android.util.Log;
 import static android.speech.tts.TextToSpeech.ERROR;
 import static android.content.ContentValues.TAG;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener {
     public static Context mContext;
     Intent recognizer_intent;
     SpeechRecognizer mRecognizer;
@@ -210,7 +219,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     };
 
     public void lowPitchTTS() {
-        mSpeckOut.setPitch(0.5f);         // 음성 톤을 0.5배 설정
+        mSpeckOut.setPitch(0.8f);         // 음성 톤을 0.5배 설정
     }
 
     public void normalPitchTTS() {
@@ -218,11 +227,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void highPitchTTS() {
-        mSpeckOut.setPitch(2.0f);         // 음성 톤을 2.0배 설정
+        mSpeckOut.setPitch(1.3f);         // 음성 톤을 2.0배 설정
     }
 
     public void lowRateTTS() {
-        mSpeckOut.setSpeechRate(0.5f);    // 읽는 속도를 0.5빠르기로 설정
+        mSpeckOut.setSpeechRate(0.8f);    // 읽는 속도를 0.5빠르기로 설정
     }
 
     public void normalRateTTS() {
@@ -230,13 +239,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void highRateTTS() {
-        mSpeckOut.setSpeechRate(2.0f);    // 읽는 속도를 2.0배 빠르기로 설정
+        mSpeckOut.setSpeechRate(1.5f);    // 읽는 속도를 2.0배 빠르기로 설정
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         // 툴바
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
@@ -351,21 +361,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                     });
                     Toast.makeText(getApplicationContext(), "사용자 설정 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
-                    dialog.show();
-                    break;
-                } else if(mode=="bookmark") {
-                    requestName = R.layout.menu_bookmark;
-                    dialog = new CustomDialog(this, requestName);
-
-                    setDialogSize();
-
-                    dialog.setDialogListener(new MyDialogListener() {  // MyDialogListener 를 구현
-                        @Override
-                        public void onMenuClicked(String modeset){
-                            mode = modeset;
-                        }
-                    });
-                    Toast.makeText(getApplicationContext(), "즐겨찾기 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                     dialog.show();
                     break;
                 } else if(mode=="zoomtts") {
@@ -493,6 +488,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         webView.loadUrl("file:///android_asset/local.html");
     }
 
+    // ASSET에 포함되어 있는 zoom HTML 문서 로딩
+    public void loadZoomPage() {
+        webView.setWebViewClient(new SMUWebVieweClient(this));
+        webView.addJavascriptInterface(new JavaScriptInterface(this), "SMUJSInterface");
+
+        webView.loadUrl("file:///android_asset/zoom.html");
+    }
+
     public void refresh() {
         //loadLink();
         webView.setWebViewClient(new SMUWebVieweClient(this));
@@ -514,17 +517,160 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //et_url.setText(nowlink);
     }
 
+    public  void reload(){
+        webView.setWebViewClient(new SMUWebVieweClient(this));
+        webView.addJavascriptInterface(new JavaScriptInterface(this), "SMUJSInterface");
+
+        webView.reload();
+    }
+
     public void previous(){
-        webView.goBack();
+        if(webView.canGoBack()){
+            webView.goBack();
+        }
         //nowlink= webView.getUrl();
         //et_url.setText(nowlink);
     }
 
     public void next(){
-        webView.goForward();
+        if(webView.canGoForward()){
+            webView.goForward();
+        }
         //nowlink = webView.getUrl();
         //et_url.setText(nowlink);
     }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ArrayList<String> arrayList = new ArrayList<String>();
+    ArrayList<String> bookList = new ArrayList<String>();
+
+    //bookmark 레이아웃 겹치기
+    public void layer() {
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final RelativeLayout Rl = (RelativeLayout) inflater.inflate(R.layout.menu_bookmark, null);
+        /*RelativeLayout.LayoutParams paramRl = new RelativeLayout.LayoutParams
+                (LinearLayout.LayoutParams.WRAP_CONTENT, WRAP_CONTENT);*/
+        DisplayMetrics dm = getApplicationContext().getResources().getDisplayMetrics();
+        final RelativeLayout.LayoutParams paramRl = new RelativeLayout.LayoutParams(dm.widthPixels, dm.heightPixels);
+        Rl.setBackgroundColor(Color.parseColor("#99000000"));
+        addContentView(Rl, paramRl);
+
+        final String current_url = webView.getUrl();
+        Button btn_add = (Button) findViewById(R.id.btn_add);
+        Button btn_out = (Button) findViewById(R.id.btn_out);
+
+        final EditText editText = (EditText) findViewById(R.id.edit_input);
+        //editText.setText(current_url);
+        final ListView listView = (ListView) findViewById(R.id.lv_bookmark);
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.menu_bookmark_row, arrayList);
+        listView.setAdapter(arrayAdapter);
+        btn_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (editText.getText().toString().length() > 0) {
+                    String inputStr = editText.getText().toString();
+                    arrayList.add(inputStr);
+                    bookList.add(current_url);
+                    arrayAdapter.notifyDataSetChanged();
+
+                }
+
+            }
+        });
+
+
+        //클릭
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView,
+                                    View view, int pos, long id) {
+                //해당 주소로 이동
+                String selected_item = bookList.get(pos);
+                loadResource(webView, selected_item);
+                //즐찾 닫기
+                View viewToRemove = findViewById(R.id.bookmark_root);
+                ((ViewGroup) viewToRemove.getParent()).removeView(viewToRemove);
+            }
+        });
+
+        //닫기
+        btn_out.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                View viewToRemove = findViewById(R.id.bookmark_root);
+                ((ViewGroup) viewToRemove.getParent()).removeView(viewToRemove);
+            }
+        });
+
+        //롱터치 삭제 및 수정
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                final int pos_del = position;
+                LayoutInflater inflater2 = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                final RelativeLayout Rel = (RelativeLayout) inflater2.inflate(R.layout.longclick, null);
+                RelativeLayout.LayoutParams paramRel = new RelativeLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
+                Rel.setBackgroundColor(Color.parseColor("#99000000"));
+                Rel.setPadding(210, 400, 210, 300);
+                addContentView(Rel, paramRel);
+
+                Button btn_modify = (Button) findViewById(R.id.btn_modify);
+                Button btn_delete = (Button) findViewById(R.id.btn_delete);
+
+                btn_delete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        View viewToRemove = findViewById(R.id.Long);
+                        ((ViewGroup) viewToRemove.getParent()).removeView(viewToRemove);
+                        arrayList.remove(pos_del);
+                        arrayAdapter.notifyDataSetChanged();
+
+                    }
+                });
+                btn_modify.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        View viewToRemove = findViewById(R.id.Long);
+                        ((ViewGroup) viewToRemove.getParent()).removeView(viewToRemove);
+                        LayoutInflater inflater3 = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        final RelativeLayout Rel_mod = (RelativeLayout) inflater3.inflate(R.layout.modify, null);
+                        RelativeLayout.LayoutParams paramRel_mod = new RelativeLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
+                        Rel_mod.setBackgroundColor(Color.parseColor("#99000000"));
+                        Rel_mod.setPadding(150, 300, 150, 300);
+                        addContentView(Rel_mod, paramRel_mod);
+                        Button btn_check = (Button) findViewById(R.id.btn_check);
+
+                        final EditText editText = (EditText) findViewById(R.id.edit_mod);
+
+                        btn_check.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String inputmod = editText.getText().toString();
+                                View viewToRemove = findViewById(R.id.bookmark_mod);
+                                ((ViewGroup) viewToRemove.getParent()).removeView(viewToRemove);
+                                int count, checked;
+                                count = arrayAdapter.getCount();
+                                if (count > 0) {
+                                    // 현재 선택된 아이템의 position 획득.
+                                    checked = pos_del;
+                                    if (checked > -1 && checked < count) {
+                                        // 아이템 수정
+                                        arrayList.set(checked, inputmod);
+                                        // listview 갱신
+                                        arrayAdapter.notifyDataSetChanged();
+                                    }
+                                }
+                            }
+
+                        });
+                    }
+                });
+                return true;
+            }
+        });
+    }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -533,6 +679,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        return false;
     }
 
     public class WebViewClient extends android.webkit.WebViewClient

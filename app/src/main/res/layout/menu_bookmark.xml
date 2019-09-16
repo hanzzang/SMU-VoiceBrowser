@@ -1,19 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/dialog_low"
-    android:orientation="vertical"
-    android:weightSum="1"
-    android:id="@+id/ll_dialog">
+    android:layout_marginHorizontal="40dp"
+    android:id="@+id/bookmark_root"
+    android:layout_marginTop="300dp"
 
-    <ListView
+    >
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@null"
-        android:dividerHeight="10dp"
-        android:id="@+id/lv_bookmark"/>
+        android:layout_height="56dp"
+        android:id="@+id/layout_top"
+        android:orientation="horizontal"
+        android:weightSum="10">
 
-</LinearLayout>
+        <EditText
+            android:id="@+id/edit_input"
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:background="@drawable/btn_add"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp" />
+
+
+        <Button
+            android:id="@+id/btn_add"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:background="@drawable/btn_add"
+            android:text="@string/button_add"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp"/>
+
+        <Button
+            android:id="@+id/btn_out"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:background="@drawable/btn_add"
+            android:text="@string/button_out"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layout_top">
+
+        <ListView
+            android:id="@+id/lv_bookmark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/outline"
+            android:divider="#FFFFFF"
+            android:dividerHeight="4dp"
+            android:overScrollMode="never"
+            android:scrollbars="none"
+            android:textColor="#FFFFFF"
+            android:textSize="40sp"
+            android:textStyle="bold" />
+
+
+    </RelativeLayout>
+</RelativeLayout>

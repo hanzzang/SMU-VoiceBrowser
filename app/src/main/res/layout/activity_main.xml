@@ -48,12 +48,24 @@
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@android:drawable/ic_dialog_dialer" />-->
 
-    <android.support.design.widget.FloatingActionButton
+   <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@android:drawable/ic_dialog_dialer" />
+
+<!--    <Button
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:layout_marginBottom="10dp"
+        android:background="#00000000"
+        android:drawableTop="@android:drawable/ic_input_add"
+        android:text="메뉴"
+        android:textColor="#5bb435"/>-->
 
 </android.support.design.widget.CoordinatorLayout>

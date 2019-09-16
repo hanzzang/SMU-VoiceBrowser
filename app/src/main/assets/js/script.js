@@ -55,6 +55,8 @@ function initChoice(){
 
     // a.href 링크 이동 방지인데 해제하는 법을 모름 흠.. 찾아보자
     //$(document).on('click', 'a', function(event) {return false;});
+    console.log("*******************initChoice****************");
+    console.log(bStartEvent + "initChoice" + bMoveEvent);
 }
 
 function initClearInfo() {
@@ -63,6 +65,7 @@ function initClearInfo() {
 
 function onStart(e) {
     bStartEvent = true;
+    console.log("*******************onStart****************");
 }
 
 function onMove(e) {
@@ -70,6 +73,7 @@ function onMove(e) {
         return; //touchstart 이벤트가 발생하지 않으면 처리하지 않는다.
     }
     bMoveEvent = true; //touchmove 이벤트 발생 여부를 설정한다.
+    console.log("*******************onMove****************");
 }
 
 function onEnd(e) {
@@ -117,6 +121,8 @@ function onEnd(e) {
                 targetArray.splice(isTarget,1);
             }else{ // 선택하지 않은 태그라면
                 // 배열에 추가
+                /*targetClone = deepCopy(targetTag);
+                targetArray.push(targetClone);*/
                 targetArray.push(targetTag);
                 // 하이라이팅
                 targetTag.style.background = 'yellow';
@@ -132,10 +138,12 @@ function onEnd(e) {
             for (var prop in targetArray) {
                 console.log("---- " + prop + " = " + targetArray[prop] + " / " + targetArray[prop].tagName +" / " + targetArray[prop].innerText + " / " + targetArray[prop].style.background + " / " + targetArray[prop].style.color);
             }
+    console.log("*******************tapend****************");
         }
     } else {
         //탭 이벤트가 아니므로 탭 이벤트 정보를 초기화한다.
         initClearInfo();
+    console.log("*******************initClearInfo****************");
     }
 
     bStartEvent = false;
@@ -165,6 +173,7 @@ function stopChoice(){
     document.removeEventListener("touchstart", onStart);
     document.removeEventListener("touchmove", onMove);
     document.removeEventListener("touchend", onEnd);
+    console.log("*******************stopChoice****************");
 }
 
 // 선택 모드 완전 종료
@@ -181,6 +190,8 @@ function finalizeChoice(){
     for (var prop in targetArray) {
         targetArray[prop].style.removeProperty('background');
         targetArray[prop].style.removeProperty('color');
+        targetArray[prop].style.removeProperty('fontSize');
+        targetArray[prop].style.removeProperty('fontWeight');
     }
 
     // 배열 비우기
@@ -189,4 +200,48 @@ function finalizeChoice(){
     document.removeEventListener("touchstart", onStart);
     document.removeEventListener("touchmove", onMove);
     document.removeEventListener("touchend", onEnd);
+    console.log("*******************finalizeChoice****************");
+}
+
+
+
+function startZoom(mode){
+    //location.href="/zoom.html";
+
+    for (var prop in targetArray) {
+/*        targetArray[prop].style.fontSize = "30px";
+        targetArray[prop].style.fontWeight = "bold";*/
+        document.write("<h1>" + targetArray[prop].innerText + "</h1>");
+        //document.write("<" + targetArray[prop].tagName + " id = '" + prop + "'>" + targetArray[prop].innerText + "<" + targetArray[prop].tagName + "/>");
+                    console.log("----startZoom " + prop + " = " + targetArray[prop] + " / " + targetArray[prop].tagName +" / " + targetArray[prop].innerText);
+    }
+
+    if(mode == "zoomtts"){
+        startTTS();
+    }
+}
+
+function backZoom(){
+    location.reload();
+/*    loadTag();
+                //배열 확인
+                for (var prop in targetArray) {
+                    console.log("----backZoom1 " + prop + " = " + targetArray[prop] + " / " + targetArray[prop].tagName +" / " + targetArray[prop].innerText);
+                }
+    initChoice();
+                //배열 확인
+                for (var prop in targetArray) {
+                    console.log("----backZoom2 " + prop + " = " + targetArray[prop] + " / " + targetArray[prop].tagName +" / " + targetArray[prop].innerText);
+                }*/
+}
+
+function loadTag(){
+        targetTag = document.getElementsByTagName('*');
+    for (var prop = 0; prop < targetTag.length; prop++) {
+        if(targetTag[prop].tagName.toLowerCase() == 'h1'){
+                    console.log("----loadTag " + prop + " = " + targetTag[prop] + " / " + targetTag[prop].tagName +" / " + targetTag[prop].innerText);
+
+            targetArray.push(targetTag[prop]);//배열 확인
+        }
+    }
 }

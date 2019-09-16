@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="40dp"
+    android:id="@+id/bookmark_mod"
+    android:layout_marginTop="300dp"
+    android:layout_centerInParent="true"
+
+    >
+
+
+    <LinearLayout
+        android:id="@+id/layout_top"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/edit_mod"
+            android:layout_width="210dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/btn_add"
+            android:textColor="#FFFFFF"
+            android:textSize="35sp" />
+
+
+        <Button
+            android:id="@+id/btn_check"
+            android:layout_width="115dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/btn_add"
+            android:text="확인"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>

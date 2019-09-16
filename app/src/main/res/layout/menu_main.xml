@@ -22,16 +22,37 @@
             android:layout_margin="10dp"
             android:clickable="true"
             app:backgroundTint="@color/colorOldBack"
+            app:borderWidth="0dp"
+            app:elevation="1dp"
+            app:fabSize="mini"
+            app:maxImageSize="70dp"
             app:srcCompat="@drawable/choice" />
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_setting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:clickable="true"
-            app:backgroundTint="@color/colorOldBack"
-            app:srcCompat="@drawable/setting" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_setting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:clickable="true"
+                app:backgroundTint="@color/colorOldBack"
+                app:srcCompat="@drawable/setting"
+                />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_bookmark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:clickable="true"
+                app:backgroundTint="@color/colorOldBack"
+                app:srcCompat="@drawable/bookmark" />
+        </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout
@@ -40,23 +61,14 @@
         android:layout_gravity="center"
         android:weightSum="1">
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_bookmark"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:clickable="true"
-            app:backgroundTint="@color/colorOldBack"
-            app:srcCompat="@drawable/bookmark" />
-
-        <android.support.design.widget.FloatingActionButton
+<!--        <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab_transform"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:clickable="true"
             app:backgroundTint="@color/colorOldBack"
-            app:srcCompat="@drawable/transform" />
+            app:srcCompat="@drawable/transform" />-->
     </LinearLayout>
 
     <LinearLayout
