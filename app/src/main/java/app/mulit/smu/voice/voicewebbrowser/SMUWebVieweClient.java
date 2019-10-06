@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
+import static app.mulit.smu.voice.voicewebbrowser.MainActivity.mode;
 
 class SMUWebVieweClient extends WebViewClient {
     private static int refreshCount;
@@ -61,6 +62,10 @@ class SMUWebVieweClient extends WebViewClient {
                     "script.innerHTML = window.atob('" + encoded + "');" +
                     "parent.appendChild(script)" +
                     "})()");
+
+            if(mode=="backZoom"){
+                view.loadUrl("javascript:backZoom();");
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

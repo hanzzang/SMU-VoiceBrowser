@@ -54,6 +54,15 @@
         android:weightSum="1">
 
         <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_choice_reset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:clickable="true"
+            app:backgroundTint="@color/colorOldBack"
+            app:srcCompat="@drawable/reset" />
+
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab_choice_ok"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

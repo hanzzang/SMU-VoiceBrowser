@@ -53,8 +53,10 @@ function initChoice(){
     document.addEventListener("touchmove", onMove);
     document.addEventListener("touchend", onEnd);
 
-    // a.href 링크 이동 방지인데 해제하는 법을 모름 흠.. 찾아보자
-    //$(document).on('click', 'a', function(event) {return false;});
+    // 링크 이동 비활성화
+    $("a").css( "pointer-events", "none" );
+    $("input").css( "pointer-events", "none" );
+
     console.log("*******************initChoice****************");
     console.log(bStartEvent + "initChoice" + bMoveEvent);
 }
@@ -85,8 +87,14 @@ function onEnd(e) {
 
     //유효한 태그 찾기 - p, strong, span
     for(i = 0; i<e.changedTouches.length;i++){
-        if(e.changedTouches[i].target.tagName.toLowerCase() == 'p' || e.changedTouches[i].target.tagName.toLowerCase() == 'strong' ||
-            e.changedTouches[i].target.tagName.toLowerCase() == 'span'){
+        if(e.changedTouches[i].target.tagName.toLowerCase() == 'p' || e.changedTouches[i].target.tagName.toLowerCase() == 'h1' ||
+            e.changedTouches[i].target.tagName.toLowerCase() == 'h2' || e.changedTouches[i].target.tagName.toLowerCase() == 'h3' ||
+            e.changedTouches[i].target.tagName.toLowerCase() == 'h4' || e.changedTouches[i].target.tagName.toLowerCase() == 'h5' ||
+            e.changedTouches[i].target.tagName.toLowerCase() == 'h6' || e.changedTouches[i].target.tagName.toLowerCase() == 'ul' ||
+            e.changedTouches[i].target.tagName.toLowerCase() == 'li' || e.changedTouches[i].target.tagName.toLowerCase() == 'ol' ||
+            e.changedTouches[i].target.tagName.toLowerCase() == 'th' || e.changedTouches[i].target.tagName.toLowerCase() == 'td' ||
+            e.changedTouches[i].target.tagName.toLowerCase() == 'dt' || e.changedTouches[i].target.tagName.toLowerCase() == 'dd' ||
+            e.changedTouches[i].target.tagName.toLowerCase() == 'div'|| e.changedTouches[i].target.tagName.toLowerCase() == 'span'){
                 nX = e.changedTouches[i].pageX;
                 nY = e.changedTouches[i].pageY;
                 targetTag = e.changedTouches[i].target;
@@ -118,32 +126,40 @@ function onEnd(e) {
                 targetTag.style.removeProperty('background');
                 targetTag.style.removeProperty('color');
                 // 배열에서 삭제
+                var textContent = window.SMUJSInterface.removeWebPageDomObject(isTarget);
                 targetArray.splice(isTarget,1);
             }else{ // 선택하지 않은 태그라면
                 // 배열에 추가
                 /*targetClone = deepCopy(targetTag);
                 targetArray.push(targetClone);*/
-                targetArray.push(targetTag);
-                // 하이라이팅
-                targetTag.style.background = 'yellow';
-                targetTag.style.color = 'black';
+                if(targetTag.innerHTML == '&nbsp;'){
+                }else{
+                    targetArray.push(targetTag);
+                    var tn = targetTag.tagName;
+                    var index = $( tn ).index( targetTag );
+                    var textContent = window.SMUJSInterface.setWebPageDomObject(index, targetTag.tagName, targetTag.innerText);
+                    // 하이라이팅
+                    targetTag.style.background = 'yellow';
+                    targetTag.style.color = 'black';
 
-                htClickInfo.sType = "tap";
-                htClickInfo.nX = nX;
-                htClickInfo.nY =nY;
-                htClickInfo.nTime = nTime;
+                    htClickInfo.sType = "tap";
+                    htClickInfo.nX = nX;
+                    htClickInfo.nY =nY;
+                    htClickInfo.nTime = nTime;
+                }
             }
-
             //배열 확인
             for (var prop in targetArray) {
-                console.log("---- " + prop + " = " + targetArray[prop] + " / " + targetArray[prop].tagName +" / " + targetArray[prop].innerText + " / " + targetArray[prop].style.background + " / " + targetArray[prop].style.color);
+                var tn = targetArray[prop].tagName;
+                var index = $( tn ).index( targetArray[prop] );
+                console.log("---- " + prop + " = " + index + " / " + targetArray[prop] + " / " + targetArray[prop].tagName +" / " + targetArray[prop].innerText + " / " + targetArray[prop].style.background + " / " + targetArray[prop].style.color);
             }
-    console.log("*******************tapend****************");
+        console.log("*******************tapend****************");
         }
     } else {
         //탭 이벤트가 아니므로 탭 이벤트 정보를 초기화한다.
         initClearInfo();
-    console.log("*******************initClearInfo****************");
+        console.log("*******************initClearInfo****************");
     }
 
     bStartEvent = false;
@@ -164,11 +180,10 @@ function startTTS(){
 function stopChoice(){
     bStartEvent = false;
     bMoveEvent = false;
-/*    document.removeEventListener("touchstart", this.onStart.bind(this));
-    document.removeEventListener("touchmove", this.onMove.bind(this));
-    document.removeEventListener("touchend", this.onEnd.bind(this));*/
 
-    //$(document).on('click', 'a', function(event) {return true;}); // a.href 링크 이동 방지 해제...?
+    // 링크 이동 비활성화
+    $("a").css( "pointer-events", "auto" );
+    $("input").css( "pointer-events", "auto" );
 
     document.removeEventListener("touchstart", onStart);
     document.removeEventListener("touchmove", onMove);
@@ -180,11 +195,10 @@ function stopChoice(){
 function finalizeChoice(){
     bStartEvent = false;
     bMoveEvent = false;
-/*    document.removeEventListener("touchstart", this.onStart.bind(this));
-    document.removeEventListener("touchmove", this.onMove.bind(this));
-    document.removeEventListener("touchend", this.onEnd.bind(this));*/
 
-    //$(document).on('click', 'a', function(event) {return true;}); // a.href 링크 이동 방지 해제...?
+    // 링크 이동 비활성화
+    $("a").css( "pointer-events", "auto" );
+    $("input").css( "pointer-events", "auto" );
 
     // 스타일 원래대로
     for (var prop in targetArray) {
@@ -196,6 +210,7 @@ function finalizeChoice(){
 
     // 배열 비우기
     targetArray.splice(0,targetArray.length);
+    var textContent = window.SMUJSInterface.clearWebPageDomObject();
 
     document.removeEventListener("touchstart", onStart);
     document.removeEventListener("touchmove", onMove);
@@ -206,15 +221,11 @@ function finalizeChoice(){
 
 
 function startZoom(mode){
-    //location.href="/zoom.html";
-
+    document.write("<body style='font-size:30px; font-weight:bold'>");
     for (var prop in targetArray) {
-/*        targetArray[prop].style.fontSize = "30px";
-        targetArray[prop].style.fontWeight = "bold";*/
-        document.write("<h1>" + targetArray[prop].innerText + "</h1>");
-        //document.write("<" + targetArray[prop].tagName + " id = '" + prop + "'>" + targetArray[prop].innerText + "<" + targetArray[prop].tagName + "/>");
-                    console.log("----startZoom " + prop + " = " + targetArray[prop] + " / " + targetArray[prop].tagName +" / " + targetArray[prop].innerText);
+        document.writeln("<" + targetArray[prop].tagName + ">" + targetArray[prop].innerText + "</" + targetArray[prop].tagName + ">" );
     }
+    document.write("</body>");
 
     if(mode == "zoomtts"){
         startTTS();
@@ -222,26 +233,70 @@ function startZoom(mode){
 }
 
 function backZoom(){
-    location.reload();
-/*    loadTag();
-                //배열 확인
-                for (var prop in targetArray) {
-                    console.log("----backZoom1 " + prop + " = " + targetArray[prop] + " / " + targetArray[prop].tagName +" / " + targetArray[prop].innerText);
-                }
+    loadTag();
     initChoice();
-                //배열 확인
-                for (var prop in targetArray) {
-                    console.log("----backZoom2 " + prop + " = " + targetArray[prop] + " / " + targetArray[prop].tagName +" / " + targetArray[prop].innerText);
-                }*/
 }
 
-function loadTag(){
-        targetTag = document.getElementsByTagName('*');
-    for (var prop = 0; prop < targetTag.length; prop++) {
-        if(targetTag[prop].tagName.toLowerCase() == 'h1'){
-                    console.log("----loadTag " + prop + " = " + targetTag[prop] + " / " + targetTag[prop].tagName +" / " + targetTag[prop].innerText);
-
-            targetArray.push(targetTag[prop]);//배열 확인
-        }
+function checkTag(){
+    for (var prop in targetArray) {
+        console.log("----checkTag " + prop + " = " + targetArray[prop] + " / " + targetArray[prop].tagName +" / " + targetArray[prop].innerText);
     }
+}
+
+function zoomin(){
+    txt = document.body;
+    style = window.getComputedStyle(txt, null).getPropertyValue('font-size');
+    currentSize = parseFloat(style);
+    if(currentSize < 100){
+        txt.style.fontSize = (currentSize + 10) + 'px';
+    }
+}
+
+function zoomout(){
+    txt = document.body;
+    style = window.getComputedStyle(txt, null).getPropertyValue('font-size');
+    currentSize = parseFloat(style);
+    if(currentSize > 5){
+        txt.style.fontSize = (currentSize - 5) + 'px';
+    }
+}
+
+function reversal(){
+    if(document.body.style.backgroundColor == "black"){
+        document.body.style.backgroundColor = "white"
+        document.body.style.color = "black";
+    } else{
+        document.body.style.backgroundColor = "black";
+        document.body.style.color = "white";
+    }
+}
+
+function choiceReset(){
+    // 스타일 원래대로
+    for (var prop in targetArray) {
+        targetArray[prop].style.removeProperty('background');
+        targetArray[prop].style.removeProperty('color');
+        targetArray[prop].style.removeProperty('fontSize');
+        targetArray[prop].style.removeProperty('fontWeight');
+     }
+
+    // 배열 비우기
+    targetArray.splice(0,targetArray.length);
+    var textContent = window.SMUJSInterface.clearWebPageDomObject();
+}
+
+// 돌아왔을때 세팅
+function loadTag(){
+    var targetArraySize = window.SMUJSInterface.getWebPageDomObjectSize();
+
+    for(var i = 0; i<targetArraySize; i++){
+        var index = window.SMUJSInterface.getWebPageDomObjectIndex(i);
+        var tn = window.SMUJSInterface.getWebPageDomObjectTagName(i);
+        var temp = document.getElementsByTagName(tn)[index];
+
+        temp.style.background = 'yellow';
+        temp.style.color = 'black';
+        targetArray.push(temp);
+    }
+    checkTag();
 }

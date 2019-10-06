@@ -31,7 +31,7 @@ public class CustomDialog extends Dialog implements View.OnClickListener{
     FloatingActionButton fab_choice, fab_setting, fab_bookmark, fab_transform, fab_previous, fab_home, fab_next ;
 
     CheckBox cb_zoom, cb_tts;
-    FloatingActionButton fab_choice_ok, fab_choice_cancel;
+    FloatingActionButton fab_choice_ok, fab_choice_cancel, fab_choice_reset;
 
     RadioButton rb_low, rb_old, rb_basic;
     RadioGroup radioGroup;
@@ -86,6 +86,7 @@ public class CustomDialog extends Dialog implements View.OnClickListener{
         cb_tts = (CheckBox) findViewById(R.id.cb_tts);
         fab_choice_ok = (FloatingActionButton) findViewById(R.id.fab_choice_ok);
         fab_choice_cancel = (FloatingActionButton) findViewById(R.id.fab_choice_cancel);
+        fab_choice_reset = (FloatingActionButton) findViewById(R.id.fab_choice_reset);
 
         // 사용자 설정 메뉴
         rb_low = (RadioButton) findViewById(R.id.rb_low);
@@ -133,6 +134,7 @@ public class CustomDialog extends Dialog implements View.OnClickListener{
         } else if(layoutName==R.layout.menu_choice) {
             fab_choice_ok.setOnClickListener(this);
             fab_choice_cancel.setOnClickListener(this);
+            fab_choice_reset.setOnClickListener(this);
         } else if(layoutName==R.layout.menu_setting) {
             /*rb_low.setOnClickListener(radioButtonClickListener);
             rb_old.setOnClickListener(radioButtonClickListener);
@@ -199,68 +201,50 @@ public class CustomDialog extends Dialog implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.fab_choice:
-                Toast.makeText(getContext(),"fab_choice 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                 dialogListener.onMenuClicked("choice");
                 webView.loadUrl("javascript:initChoice();");
                 dismiss();
                 break;
             case R.id.fab_setting:
-                Toast.makeText(getContext(),"fab_setting 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                 dialogListener.onMenuClicked("setting");
                 dismiss();
                 break;
             case R.id.fab_bookmark:
-                Toast.makeText(getContext(),"fab_bookmark 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                 //dialogListener.onMenuClicked("main");
                 ((MainActivity)MainActivity.mContext).layer();
                 dismiss();
                 break;
-           /* case R.id.fab_transform:
-                Toast.makeText(getContext(),"fab_transform 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
-                dialogListener.onMenuClicked("main");
-                dismiss();
-                break;*/
             case R.id.fab_previous:
-                Toast.makeText(getContext(),"fab_previous 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                 ((MainActivity)MainActivity.mContext).previous();
                 dialogListener.onMenuClicked("main");
                 dismiss();
                 break;
             case R.id.fab_home:
-                Toast.makeText(getContext(),"fab_home 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                 ((MainActivity)MainActivity.mContext).home();
                 dialogListener.onMenuClicked("main");
                 dismiss();
                 break;
             case R.id.fab_next:
-                Toast.makeText(getContext(),"fab_next 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                 ((MainActivity)MainActivity.mContext).next();
                 dialogListener.onMenuClicked("main");
                 dismiss();
                 break;
             case R.id.fab_choice_ok:
                 if(cb_zoom.isChecked() && cb_tts.isChecked()){ // 확대음성
-                    Toast.makeText(getContext(),"확대 음성 모드입니다.", Toast.LENGTH_LONG).show();
                     dialogListener.onMenuClicked("zoomtts");
                     webView.loadUrl("javascript:startZoom('zoomtts');");
-                    //webView.loadUrl("javascript:stopChoice();");
+                    webView.loadUrl("javascript:stopChoice();");
                     dismiss();
                 } else if(cb_tts.isChecked() && !(cb_zoom.isChecked())){ // 음성
-                    Toast.makeText(getContext(),"음성 모드입니다.", Toast.LENGTH_LONG).show();
                     dialogListener.onMenuClicked("tts");
                     webView.loadUrl("javascript:startTTS();");
                     webView.loadUrl("javascript:stopChoice();");
                     dismiss();
                 } else if(!(cb_tts.isChecked()) && cb_zoom.isChecked()){ //확대
-                    Toast.makeText(getContext(),"확대 모드입니다.", Toast.LENGTH_LONG).show();
                     dialogListener.onMenuClicked("zoom");
                     webView.loadUrl("javascript:startZoom('zoom');");
-                    //webView.loadUrl("javascript:stopChoice();");
+                    webView.loadUrl("javascript:stopChoice();");
                     dismiss();
-
-                    //((MainActivity)MainActivity.mContext).loadZoomPage();
-                    //webView.loadUrl("file:///android_asset/zoom.html");
-                    //webView.loadUrl("javascript:stopChoice();");
                 } else{
                     Toast.makeText(getContext(),"모드를 체크하세요.", Toast.LENGTH_LONG).show();
                     dialogListener.onMenuClicked("choice");
@@ -268,85 +252,81 @@ public class CustomDialog extends Dialog implements View.OnClickListener{
                 }
                 break;
             case R.id.fab_choice_cancel:
-                Toast.makeText(getContext(),"fab_choice_cancel 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                 dialogListener.onMenuClicked("main");
+                ((MainActivity)MainActivity.mContext).stopTTS();
                 webView.loadUrl("javascript:finalizeChoice();");
                 dismiss();
                 break;
-            case R.id.fab_tts_back:
-                Toast.makeText(getContext(),"fab_tts_back 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
+            case R.id.fab_choice_reset:
                 dialogListener.onMenuClicked("choice");
+                webView.loadUrl("javascript:choiceReset();");
+                dismiss();
+                break;
+            case R.id.fab_tts_back:
+                dialogListener.onMenuClicked("choice");
+                ((MainActivity)MainActivity.mContext).stopTTS();
                 webView.loadUrl("javascript:initChoice();");
                 dismiss();
                 break;
             case R.id.fab_tts_cancel:
-                Toast.makeText(getContext(),"fab_tts_cancel 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                 dialogListener.onMenuClicked("main");
+                ((MainActivity)MainActivity.mContext).stopTTS();
                 webView.loadUrl("javascript:finalizeChoice();");
                 dismiss();
                 break;
             case R.id.fab_zoom_back:
-                Toast.makeText(getContext(),"fab_zoom_back 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
-                dialogListener.onMenuClicked("choice");
-                ((MainActivity)MainActivity.mContext).reload();
-                webView.loadUrl("javascript:initChoice();");
+                dialogListener.onMenuClicked("backZoom");
+                ((MainActivity)MainActivity.mContext).stopTTS();
+                webView.reload();
                 dismiss();
                 break;
             case R.id.fab_zoom_cancel:
-                Toast.makeText(getContext(),"fab_zoom_cancel 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                 dialogListener.onMenuClicked("main");
-                ((MainActivity)MainActivity.mContext).reload();
+                ((MainActivity)MainActivity.mContext).stopTTS();
+                webView.reload();
                 webView.loadUrl("javascript:finalizeChoice();");
                 dismiss();
                 break;
             case R.id.btn_pitch_low:
-                Toast.makeText(getContext(),"btn_pitch_low 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                 ((MainActivity)MainActivity.mContext).lowPitchTTS();
                 break;
             case R.id.btn_pitch_normal:
-                Toast.makeText(getContext(),"btn_pitch_normal 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                 ((MainActivity)MainActivity.mContext).normalPitchTTS();
                 break;
             case R.id.btn_pitch_high:
-                Toast.makeText(getContext(),"btn_pitch_high 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                 ((MainActivity)MainActivity.mContext).highPitchTTS();
                 break;
             case R.id.btn_rate_low:
-                Toast.makeText(getContext(),"btn_rate_low 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                 ((MainActivity)MainActivity.mContext).lowRateTTS();
                 break;
             case R.id.btn_rate_normal:
-                Toast.makeText(getContext(),"btn_rate_normal 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                 ((MainActivity)MainActivity.mContext).normalRateTTS();
                 break;
             case R.id.btn_rate_high:
-                Toast.makeText(getContext(),"btn_rate_high 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                 ((MainActivity)MainActivity.mContext).highRateTTS();
                 break;
-
             case R.id.fab_zoomin:
-                Toast.makeText(getContext(),"fab_zoomin 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
+                webView.loadUrl("javascript:zoomin();");
                 dismiss();
                 break;
             case R.id.fab_zoomout:
-                Toast.makeText(getContext(),"fab_zoomout 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
+                webView.loadUrl("javascript:zoomout();");
                 dismiss();
                 break;
             case R.id.fab_reversal:
-                Toast.makeText(getContext(),"fab_reversal 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
+                webView.loadUrl("javascript:reversal();");
                 dismiss();
                 break;
             case R.id.fab_play:
-                Toast.makeText(getContext(),"fab_play 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                 webView.loadUrl("javascript:startTTS();");
                 dismiss();
                 break;
             case R.id.fab_pause:
-                Toast.makeText(getContext(),"fab_pause 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
+                ((MainActivity)MainActivity.mContext).stopTTS();
                 dismiss();
                 break;
             case R.id.fab_stop:
-                Toast.makeText(getContext(),"fab_stop 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
+                ((MainActivity)MainActivity.mContext).stopTTS();
                 dismiss();
                 break;
         }

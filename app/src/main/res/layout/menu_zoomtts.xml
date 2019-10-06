@@ -79,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:background="@color/colorOldBack"
+                android:background="@drawable/btn_tts_action"
                 android:text="▼"
                 android:textSize="30sp" />
 
@@ -89,7 +89,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:background="@color/colorOldBack"
+                android:background="@drawable/btn_tts_action"
                 android:text="0"
                 android:textSize="30sp" />
 
@@ -99,7 +99,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:background="@color/colorOldBack"
+                android:background="@drawable/btn_tts_action"
                 android:text="▲"
                 android:textSize="30sp" />
         </LinearLayout>
@@ -128,7 +128,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:background="@color/colorOldBack"
+                android:background="@drawable/btn_tts_action"
                 android:text="▼"
                 android:textSize="30sp" />
 
@@ -138,7 +138,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:background="@color/colorOldBack"
+                android:background="@drawable/btn_tts_action"
                 android:text="0"
                 android:textSize="30sp" />
 
@@ -148,7 +148,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:background="@color/colorOldBack"
+                android:background="@drawable/btn_tts_action"
                 android:text="▲"
                 android:textSize="30sp" />
         </LinearLayout>

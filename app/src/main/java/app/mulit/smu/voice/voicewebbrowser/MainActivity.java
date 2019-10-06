@@ -3,6 +3,7 @@ package app.mulit.smu.voice.voicewebbrowser;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -11,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.JobIntentService;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -24,6 +26,8 @@ import android.graphics.Bitmap;
 import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
@@ -62,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextToSpeech mSpeckOut;
 
     Button btn_url;
+    Button btn_home;
     String link;
     String nowlink;
     public static WebView webView;
@@ -70,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //
     FloatingActionButton fab;
-    String mode;
+    public static String mode;
     private int requestName;
     CustomDialog dialog;
 
@@ -251,11 +256,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
 
-        // 전역변수
         mode = "main";
         mContext = this;
 
         btn_url = (Button) findViewById(R.id.btn_url);
+        btn_home = (Button) findViewById(R.id.btn_home);
+        btn_home.setOnClickListener(this);
         webView = (WebView) findViewById(R.id.webView1);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.GONE);
@@ -263,47 +269,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         loadResource(webView, LOCAL_RESOURCE);
 
-/*      대표님이 준 코드에 있던 원래 버튼들
-        FloatingActionButton fab0 = (FloatingActionButton) findViewById(R.id.fab0);
-        fab0.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                webView.loadUrl("javascript:window.SMUJSInterface.getWebPageBodyText(document.getElementsByTagName('body')[0].innerText);");
-            }
-        });*/
-
-/*        FloatingActionButton fab1 = (FloatingActionButton) findViewById(R.id.fab1);
-        fab1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // 변경할 마크업 테그
-                webView.loadUrl("javascript:replaceMathMLTagHtml();");
-            }
-        });*/
-
-/*        FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fab2);
-        fab2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // 변경할 마크업 태그
-                webView.loadUrl("javascript:replaceTableTagHtml();");
-            }
-        });*/
-
-
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
-
-
-/*        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(mode==0) { // 기본메뉴
-                    Toast.makeText(getApplicationContext(), "fab 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
-                    cd.show();  //다이얼로그
-                }
-            }
-        });*/
 
         initSTT();
         initTTS();
@@ -330,7 +297,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             mode = modeset;
                         }
                     });
-                    Toast.makeText(getApplicationContext(), "기본 메뉴 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                     dialog.show();
                     break;
                 } else if(mode=="choice") {
@@ -345,7 +311,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             mode = modeset;
                         }
                     });
-                    Toast.makeText(getApplicationContext(), "선택 메뉴 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
+                    dialog.show();
+                    break;
+                } else if(mode=="backZoom") {
+                    requestName = R.layout.menu_choice;
+                    dialog = new CustomDialog(this, requestName);
+
+                    setDialogSize();
+
+                    dialog.setDialogListener(new MyDialogListener() {  // MyDialogListener 를 구현
+                        @Override
+                        public void onMenuClicked(String modeset){
+                            mode = modeset;
+                        }
+                    });
                     dialog.show();
                     break;
                 } else if(mode=="setting") {
@@ -360,7 +339,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             mode = modeset;
                         }
                     });
-                    Toast.makeText(getApplicationContext(), "사용자 설정 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                     dialog.show();
                     break;
                 } else if(mode=="zoomtts") {
@@ -375,7 +353,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             mode = modeset;
                         }
                     });
-                    Toast.makeText(getApplicationContext(), "확대 음성 메뉴 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                     dialog.show();
                     break;
                 } else if(mode=="tts") {
@@ -390,7 +367,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             mode = modeset;
                         }
                     });
-                    Toast.makeText(getApplicationContext(), "음성 메뉴 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                     dialog.show();
                     break;
                 } else if(mode=="zoom") {
@@ -405,10 +381,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             mode = modeset;
                         }
                     });
-                    Toast.makeText(getApplicationContext(), "확대 메뉴 버튼을 눌렀습니다.", Toast.LENGTH_LONG).show();
                     dialog.show();
                     break;
                 }
+            case R.id.btn_home:
+                editHome();
+                break;
         }
     }
 
@@ -437,6 +415,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onStart() {
         super.onStart();
         home();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        stopTTS();
+        dialog.dismiss();
+        mode = "main";
+        JavaScriptInterface.clearWebPageDomObject();
     }
 
     public void click(View view) {
@@ -485,14 +472,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         webView.setWebViewClient(new SMUWebVieweClient(this));
         webView.addJavascriptInterface(new JavaScriptInterface(this), "SMUJSInterface");
 
-        webView.loadUrl("file:///android_asset/local.html");
-    }
-
-    // ASSET에 포함되어 있는 zoom HTML 문서 로딩
-    public void loadZoomPage() {
-        webView.setWebViewClient(new SMUWebVieweClient(this));
-        webView.addJavascriptInterface(new JavaScriptInterface(this), "SMUJSInterface");
-
         webView.loadUrl("file:///android_asset/zoom.html");
     }
 
@@ -512,12 +491,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         webView.setWebViewClient(new SMUWebVieweClient(this));
         webView.addJavascriptInterface(new JavaScriptInterface(this), "SMUJSInterface");
 
-        webView.loadUrl("http://www.sookmyung.ac.kr");
+        //저장된 값을 불러오기 위해 같은 네임파일을 찾음.
+        SharedPreferences sf = getSharedPreferences("sFile",MODE_PRIVATE);
+        //text라는 key에 저장된 값이 있는지 확인. 아무값도 들어있지 않으면 ""를 반환
+        String homeurl = sf.getString("homeurl","");
+
+        if(homeurl != null && homeurl.equals("")){
+            homeurl = "http://www.sookmyung.ac.kr";
+        }
+
+        webView.loadUrl(homeurl);
         //nowlink = webView.getUrl();
         //et_url.setText(nowlink);
     }
 
-    public  void reload(){
+
+    public void editHome() {
+        //SharedPreferences를 sFile이름, 기본모드로 설정
+        SharedPreferences sharedPreferences = getSharedPreferences("sFile",MODE_PRIVATE);
+
+        //저장을 하기위해 editor를 이용하여 값을 저장시켜준다.
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String urlString = webView.getUrl().toString();
+        String homeurl = urlString; // 사용자가 입력한 저장할 데이터
+        editor.putString("homeurl",homeurl); // key, value를 이용하여 저장하는 형태
+
+        //최종 커밋
+        editor.commit();
+    }
+
+    public void reload(){
         webView.setWebViewClient(new SMUWebVieweClient(this));
         webView.addJavascriptInterface(new JavaScriptInterface(this), "SMUJSInterface");
 
@@ -725,6 +728,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mRecognizer.stopListening();
             mRecognizer.destroy();
             mRecognizer = null;
+        }
+    }
+
+    // TTS 정지
+    public void stopTTS() {
+        // 음성합성 객체가 남아있다면 실행을 중지하고 메모리에서 제거
+        if(mSpeckOut != null){
+            mSpeckOut.stop();
         }
     }
 }

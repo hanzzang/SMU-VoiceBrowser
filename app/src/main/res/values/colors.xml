@@ -8,6 +8,7 @@
     <color name="colorTransparency">#00FF0000</color>
     <color name="colorBlackTransparency">#66000000</color>
     <color name="colorOldBack">#FAFAFA</color>
+    <color name="colorOldBack2">#A4A4A4</color>
     <color name="colorOldHighlight">#000000</color>
     <color name="colorLowBack">#DD2E2E2E</color>
     <color name="colorLowHighlight">#FFFF00</color>

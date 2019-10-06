@@ -16,56 +16,67 @@
         tools:context="com.javapapers.browser.MainActivity"
         tools:showIn="@layout/activity_main">
 
-
-        <EditText
-            android:id="@+id/et_url"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/btn_url"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="5dp"
-            android:maxLength="25"
-            android:hint="홈페이지 주소를 입력하세요"
-            android:textColor="#ffffff"
-            android:textColorHint="#ffffff" />
+            android:orientation="horizontal"
+            android:id="@+id/ll_content">
 
-        <Button
-            android:id="@+id/btn_url"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="120dp"
-            android:background="@color/colorTransparency"
-            android:drawableLeft="@android:drawable/ic_menu_search"
-            android:onClick="click" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/btn_bookmark_add"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="80dp"
-            android:background="@color/colorTransparency"
-            android:drawableLeft="@android:drawable/btn_star_big_on" />
+                <EditText
+                    android:id="@+id/et_url"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_margin="5dp"
+                    android:hint="홈페이지 주소를 입력하세요"
+                    android:maxLength="30"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColor="#ffffff"
+                    android:textColorHint="#ffffff" />
 
-        <Button
-            android:id="@+id/btn_home"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
-            android:background="@color/colorTransparency"
-            android:text="시작페이지로"
-            android:textColor="@color/colorOldBack" />
+                <Button
+                    android:id="@+id/btn_url"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_toRightOf="@id/et_url"
+                    android:background="@drawable/btn_url_action"
+                    android:onClick="click" />
+
+                <Button
+                    android:id="@+id/btn_home"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/colorTransparency"
+                    android:text="시작페이지로"
+                    android:textColor="@drawable/btn_home_action"
+                    android:textSize="18dp"
+                    android:textStyle="bold"/>
+            </RelativeLayout>
+        </LinearLayout>
 
         <WebView
             android:id="@+id/webView1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/et_url"
+            android:layout_below="@+id/ll_content"
             android:layout_centerHorizontal="true" />
 
         <ProgressBar

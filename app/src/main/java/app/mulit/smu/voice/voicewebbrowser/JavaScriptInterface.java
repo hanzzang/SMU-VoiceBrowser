@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.xml.transform.Result;
@@ -27,6 +28,8 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 class JavaScriptInterface {
+    public static ArrayList<TargetTag> targetArrays = new ArrayList<TargetTag>();
+    int i = 0;
     Context mContext;
 
     private void speech(String charSequence) {
@@ -296,5 +299,87 @@ class JavaScriptInterface {
         }
 
         return strFile;
+    }
+
+
+    @JavascriptInterface
+    public void setWebPageDomObject(int index, String tagName, String innetText) {
+        targetArrays.add(new TargetTag(index, tagName, innetText));
+        printTargetArray();
+    }
+
+    @JavascriptInterface
+    public void removeWebPageDomObject(int removeIndex) {
+        targetArrays.remove(removeIndex);
+        printTargetArray();
+    }
+
+    @JavascriptInterface
+    public static void clearWebPageDomObject() {
+        targetArrays.clear();
+        printTargetArray();
+    }
+
+    public static void printTargetArray(){
+        for(int i = 0; i < targetArrays.size(); i++){
+            System.out.println("i = " + i + " index: " + targetArrays.get(i).getIndex() + " tagName: " + targetArrays.get(i).getTagName() + " innerText: " + targetArrays.get(i).getInnerText());
+        }
+    }
+
+    @JavascriptInterface
+    public int getWebPageDomObjectIndex(int i){
+        return targetArrays.get(i).getIndex();
+    }
+
+    @JavascriptInterface
+    public String getWebPageDomObjectTagName(int i){
+        return targetArrays.get(i).getTagName();
+    }
+
+    @JavascriptInterface
+    public int getWebPageDomObjectSize(){
+        return targetArrays.size();
+    }
+}
+
+class TargetTag{
+    public int index;
+    public String tagName;
+    public String innerText;
+
+    public int getIndex(){
+        return index;
+    }
+
+    public void setIndex(int index){
+        this.index = index;
+    }
+
+    public String getTagName(){
+        return tagName;
+    }
+
+    public void setTagName(String tagName){
+        this.tagName = tagName;
+    }
+
+    public String getInnerText(){
+        return innerText;
+    }
+
+    public void setinnerText(String innerText){
+        this.innerText = innerText;
+    }
+
+    public TargetTag(int index, String tagName, String innerText){
+        this.index = index;
+        this.tagName = tagName;
+        this.innerText = innerText;
+    }
+
+    public void show(){
+        System.out.println("index : " + getIndex());
+        System.out.println("tagname : " + getTagName());
+        System.out.println("innertext : " + getInnerText());
     }
 }
