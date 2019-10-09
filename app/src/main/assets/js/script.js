@@ -30,6 +30,7 @@ function getTagCount(tagName)
 
 ////////////////////// 선택모드
 var targetArray = []; // target 담는 배열
+var parentTag; // 더블 탭 부모
 
 var bStartEvent = false; //touchstart 이벤트 발생 여부 플래그
 var bMoveEvent = false; //touchmove 이벤트 발생 여부 플래그
@@ -43,17 +44,17 @@ htClickInfo = { //더블탭을 판단하기 위한 마지막 탭 이벤트의 �
 
 var nDoubleTapDuration = 200; //더블탭을 판단하는 기준 시간(ms)
 var nTapThreshold = 5; //탭을 판단하는 거리
+var oTapEventTimer = null; //탭-더블탭 대기 타이머
 
 // 선택모드 이벤트 리스너
 function initChoice(){
-/*    document.addEventListener("touchstart", this.onStart.bind(this));
-    document.addEventListener("touchmove", this.onMove.bind(this));
-    document.addEventListener("touchend", this.onEnd.bind(this));*/
     document.addEventListener("touchstart", onStart);
     document.addEventListener("touchmove", onMove);
     document.addEventListener("touchend", onEnd);
 
     // 링크 이동 비활성화
+    $('a').click(function () {return false;});
+    $('input').click(function () {return false;});
     $("a").css( "pointer-events", "none" );
     $("input").css( "pointer-events", "none" );
 
@@ -114,47 +115,93 @@ function onEnd(e) {
         if(htClickInfo.sType == "tap" && (nTime - htClickInfo.nTime) <= nDoubleTapDuration){
             if( (Math.abs(htClickInfo.nX-nX) <= nTapThreshold)
                  && (Math.abs(htClickInfo.nY-nY) <= nTapThreshold) ){   //더블탭으로 판단한다. (탭이 발생하지 않게 탭 발생 타이머 초기화한다.)
-                alert('double tap!');
+                console.log("------------------dddddtap------------------");
                 clearTimeout(oTapEventTimer);
+
+                targetTag = targetTag.parentElement.parentElement;
+
+                var isTarget = targetArray.indexOf(targetTag);
+                if(isTarget != -1){ // 이미 선택한 태그라면
+                    // 스타일 원래대로
+                    targetTag.style.removeProperty('background');
+                    targetTag.style.removeProperty('color');
+                    // 배열에서 삭제
+                    var textContent = window.SMUJSInterface.removeWebPageDomObject(isTarget);
+                    targetArray.splice(isTarget,1);
+                }else{ // 선택하지 않은 태그라면
+                    // 배열에 추가
+                    if(targetTag.innerHTML == '&nbsp;'){
+                    }else{
+                        targetArray.push(targetTag);
+                        var tn = targetTag.tagName;
+                        var index = $( tn ).index( targetTag );
+                        var textContent = window.SMUJSInterface.setWebPageDomObject(index, targetTag.tagName, targetTag.innerText);
+                        // 하이라이팅
+                        targetTag.style.background = 'orange';
+                        targetTag.style.color = 'black';
+                    }
+                }
+                /*if(Object.equals(parentTag, targetTag.parentElement.parentElement)){  // 또 부모로
+                    console.log("------------------parentTag.parentElement;------------------");
+                    var isTarget = targetArray.indexOf(parentTag);
+                    // 스타일 원래대로
+                    parentTag.style.removeProperty('background');
+                    parentTag.style.removeProperty('color');
+                    // 배열에서 삭제
+                    var textContent = window.SMUJSInterface.removeWebPageDomObject(isTarget);
+                    targetArray.splice(isTarget,1);
+
+                    parentTag = parentTag.parentElement.parentElement;
+                } else{ // 새로운 부모
+                    console.log("------------------target.parentElement;------------------");
+                    parentTag = targetTag.parentElement.parentElement
+                }
+                // 선택하지 않은 태그라면
+                // 배열에 추가
+                if(parentTag.innerHTML == '&nbsp;'){
+                }else{
+                    targetArray.push(parentTag);
+                    var tn = parentTag.tagName;
+                    var index = $( tn ).index( parentTag );
+                    var textContent = window.SMUJSInterface.setWebPageDomObject(index, parentTag.tagName, parentTag.innerText);
+                    // 하이라이팅
+                    parentTag.style.background = 'yellow';
+                    parentTag.style.color = 'black';
+                }*/
             }
         } else {
             //탭 이벤트로 판단한다.
             //현재 탭 이벤트들에 대한 정보를 업데이트한다.
-            var isTarget = targetArray.indexOf(targetTag);
-            if(isTarget != -1){ // 이미 선택한 태그라면
-                // 스타일 원래대로
-                targetTag.style.removeProperty('background');
-                targetTag.style.removeProperty('color');
-                // 배열에서 삭제
-                var textContent = window.SMUJSInterface.removeWebPageDomObject(isTarget);
-                targetArray.splice(isTarget,1);
-            }else{ // 선택하지 않은 태그라면
-                // 배열에 추가
-                /*targetClone = deepCopy(targetTag);
-                targetArray.push(targetClone);*/
-                if(targetTag.innerHTML == '&nbsp;'){
-                }else{
-                    targetArray.push(targetTag);
-                    var tn = targetTag.tagName;
-                    var index = $( tn ).index( targetTag );
-                    var textContent = window.SMUJSInterface.setWebPageDomObject(index, targetTag.tagName, targetTag.innerText);
-                    // 하이라이팅
-                    targetTag.style.background = 'yellow';
-                    targetTag.style.color = 'black';
-
-                    htClickInfo.sType = "tap";
-                    htClickInfo.nX = nX;
-                    htClickInfo.nY =nY;
-                    htClickInfo.nTime = nTime;
+            console.log("------------------tap------------------");
+            oTapEventTimer = setTimeout(function(){
+                var isTarget = targetArray.indexOf(targetTag);
+                if(isTarget != -1){ // 이미 선택한 태그라면
+                    // 스타일 원래대로
+                    targetTag.style.removeProperty('background');
+                    targetTag.style.removeProperty('color');
+                    // 배열에서 삭제
+                    var textContent = window.SMUJSInterface.removeWebPageDomObject(isTarget);
+                    targetArray.splice(isTarget,1);
+                }else{ // 선택하지 않은 태그라면
+                    // 배열에 추가
+                    if(targetTag.innerHTML == '&nbsp;'){
+                    }else{
+                        targetArray.push(targetTag);
+                        var tn = targetTag.tagName;
+                        var index = $( tn ).index( targetTag );
+                        var textContent = window.SMUJSInterface.setWebPageDomObject(index, targetTag.tagName, targetTag.innerText);
+                        // 하이라이팅
+                        targetTag.style.background = 'yellow';
+                        targetTag.style.color = 'black';
+                    }
                 }
-            }
-            //배열 확인
-            for (var prop in targetArray) {
-                var tn = targetArray[prop].tagName;
-                var index = $( tn ).index( targetArray[prop] );
-                console.log("---- " + prop + " = " + index + " / " + targetArray[prop] + " / " + targetArray[prop].tagName +" / " + targetArray[prop].innerText + " / " + targetArray[prop].style.background + " / " + targetArray[prop].style.color);
-            }
-        console.log("*******************tapend****************");
+            }.bind(this), 300);
+
+            htClickInfo.sType = "tap";
+            htClickInfo.nX = nX;
+            htClickInfo.nY =nY;
+            htClickInfo.nTime = nTime;
+            console.log("*******************tapend****************");
         }
     } else {
         //탭 이벤트가 아니므로 탭 이벤트 정보를 초기화한다.
@@ -181,10 +228,6 @@ function stopChoice(){
     bStartEvent = false;
     bMoveEvent = false;
 
-    // 링크 이동 비활성화
-    $("a").css( "pointer-events", "auto" );
-    $("input").css( "pointer-events", "auto" );
-
     document.removeEventListener("touchstart", onStart);
     document.removeEventListener("touchmove", onMove);
     document.removeEventListener("touchend", onEnd);
@@ -196,7 +239,9 @@ function finalizeChoice(){
     bStartEvent = false;
     bMoveEvent = false;
 
-    // 링크 이동 비활성화
+    // 링크 이동 활성화
+    $('a').unbind('click');
+    $('input').unbind('click');
     $("a").css( "pointer-events", "auto" );
     $("input").css( "pointer-events", "auto" );
 
@@ -209,6 +254,7 @@ function finalizeChoice(){
     }
 
     // 배열 비우기
+    parentTag = "";
     targetArray.splice(0,targetArray.length);
     var textContent = window.SMUJSInterface.clearWebPageDomObject();
 
@@ -221,7 +267,7 @@ function finalizeChoice(){
 
 
 function startZoom(mode){
-    document.write("<body style='font-size:30px; font-weight:bold'>");
+    document.write("<body style='font-size:40px; font-weight:bold; line-height:150%;'>");
     for (var prop in targetArray) {
         document.writeln("<" + targetArray[prop].tagName + ">" + targetArray[prop].innerText + "</" + targetArray[prop].tagName + ">" );
     }
@@ -281,6 +327,7 @@ function choiceReset(){
      }
 
     // 배열 비우기
+    parentTag = "";
     targetArray.splice(0,targetArray.length);
     var textContent = window.SMUJSInterface.clearWebPageDomObject();
 }
@@ -299,4 +346,39 @@ function loadTag(){
         targetArray.push(temp);
     }
     checkTag();
+}
+
+Object.equals = function( x, y ) {
+  if ( x === y ) return true;
+    // if both x and y are null or undefined and exactly the same
+
+  if ( ! ( x instanceof Object ) || ! ( y instanceof Object ) ) return false;
+    // if they are not strictly equal, they both need to be Objects
+
+  if ( x.constructor !== y.constructor ) return false;
+    // they must have the exact same prototype chain, the closest we can do is
+    // test there constructor.
+
+  for ( var p in x ) {
+    if ( ! x.hasOwnProperty( p ) ) continue;
+      // other properties were tested using x.constructor === y.constructor
+
+    if ( ! y.hasOwnProperty( p ) ) return false;
+      // allows to compare x[ p ] and y[ p ] when set to undefined
+
+    if ( x[ p ] === y[ p ] ) continue;
+      // if they have the same strict value or identity then they are equal
+
+    if ( typeof( x[ p ] ) !== "object" ) return false;
+      // Numbers, Strings, Functions, Booleans must be strictly equal
+
+    if ( ! Object.equals( x[ p ],  y[ p ] ) ) return false;
+      // Objects and Arrays must be tested recursively
+  }
+
+  for ( p in y ) {
+    if ( y.hasOwnProperty( p ) && ! x.hasOwnProperty( p ) ) return false;
+      // allows x[ p ] to be set to undefined
+  }
+  return true;
 }
