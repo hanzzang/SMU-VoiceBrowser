@@ -25,7 +25,7 @@
             android:buttonTint="@color/colorOldBack"
             android:text="확대모드"
             android:textColor="@color/colorOldBack"
-            android:textSize="40sp" />
+            android:textSize="50sp" />
 
     </LinearLayout>
 
@@ -45,7 +45,7 @@
             android:buttonTint="@color/colorOldBack"
             android:text="음성모드"
             android:textColor="@color/colorOldBack"
-            android:textSize="40sp" />
+            android:textSize="50sp" />
 
     </LinearLayout>
 
