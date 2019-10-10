@@ -30,8 +30,8 @@ function getTagCount(tagName)
 
 ////////////////////// 선택모드
 var targetArray = []; // target 담는 배열
-/*var parentTag; // 더블 탭 부모
-var parentCount = 0;*/
+var parentTag; // 더블 탭 저장
+var parentCount = 0;
 
 var bStartEvent = false; //touchstart 이벤트 발생 여부 플래그
 var bMoveEvent = false; //touchmove 이벤트 발생 여부 플래그
@@ -116,91 +116,86 @@ function onEnd(e) {
         if(htClickInfo.sType == "tap" && (nTime - htClickInfo.nTime) <= nDoubleTapDuration){
             if( (Math.abs(htClickInfo.nX-nX) <= nTapThreshold)
                  && (Math.abs(htClickInfo.nY-nY) <= nTapThreshold) ){   //더블탭으로 판단한다. (탭이 발생하지 않게 탭 발생 타이머 초기화한다.)
-/*                console.log("------------------dddddtap------------------");
+                console.log("------------------dddddtap------------------");
                 clearTimeout(oTapEventTimer);
 
-                targetTag = targetTag.parentElement.parentElement;
+                switch (parentCount) {
+                    case 0: // new
+                        console.log("------------------new target.parentElement;------------------");
+                        parentTag = targetTag.parentElement;
+                        var isTarget = targetArray.indexOf(parentTag);
+                        if(isTarget != -1){ // 이미 선택한 태그라면
+                            break;
+                        }else{ // 선택하지 않은 태그라면
+                            // 배열에 추가
+                            if(parentTag.innerHTML == '&nbsp;'){
+                            }else{
+                                targetArray.push(parentTag);
+                                var tn = parentTag.tagName;
+                                var index = $( tn ).index( parentTag );
+                                var textContent = window.SMUJSInterface.setWebPageDomObject(index, parentTag.tagName, parentTag.innerText);
+                                // 하이라이팅
+                                parentTag.style.background = 'pink';
+                                parentTag.style.color = 'black';
 
-                var isTarget = targetArray.indexOf(targetTag);
-                if(isTarget != -1){ // 이미 선택한 태그라면
-                    // 스타일 원래대로
-                    targetTag.style.removeProperty('background');
-                    targetTag.style.removeProperty('color');
-                    // 배열에서 삭제
-                    var textContent = window.SMUJSInterface.removeWebPageDomObject(isTarget);
-                    targetArray.splice(isTarget,1);
-                }else{ // 선택하지 않은 태그라면
-                    // 배열에 추가
-                    if(targetTag.innerHTML == '&nbsp;'){
-                    }else{
-                        targetArray.push(targetTag);
-                        var tn = targetTag.tagName;
-                        var index = $( tn ).index( targetTag );
-                        var textContent = window.SMUJSInterface.setWebPageDomObject(index, targetTag.tagName, targetTag.innerText);
-                        // 하이라이팅
-                        targetTag.style.background = 'orange';
-                        targetTag.style.color = 'black';
-                    }
-                }*/
-                /*if(Object.equals(parentTag, targetTag.parentElement.parentElement) && parentCount < 3){  // 또 부모로
-                    console.log("------------------parentTag.parentElement;------------------");
-                    var isTarget = targetArray.indexOf(parentTag);
-                    // 스타일 원래대로
-                    parentTag.style.removeProperty('background');
-                    parentTag.style.removeProperty('color');
-                    // 배열에서 삭제
-                    var textContent = window.SMUJSInterface.removeWebPageDomObject(isTarget);
-                    targetArray.splice(isTarget,1);
+                                parentCount++;
+                            }
+                        }
+                    break;
+                    case 1:
+                        console.log("------------------again parentTag.parentElement;------------------");
 
-                    parentTag = parentTag.parentElement.parentElement;
-                    parentCount++;
+                        var tempparentTag = parentTag.parentElement;
+                        var isTarget = targetArray.indexOf(tempparentTag);
+                        if(isTarget != -1){ // 이미 선택한 태그라면 넘어가기
+                            break;
+                        }else{ // 선택하지 않은 태그라면
+                            // 부모 태그 삭제
+                            var isTarget = targetArray.indexOf(parentTag);
+                            // 스타일 원래대로
+                            parentTag.style.removeProperty('background');
+                            parentTag.style.removeProperty('color');
+                            // 배열에서 삭제
+                            var textContent = window.SMUJSInterface.removeWebPageDomObject(isTarget);
+                            targetArray.splice(isTarget,1);
 
-                    // 선택하지 않은 태그라면
-                    // 배열에 추가
-                    if(parentTag.innerHTML == '&nbsp;'){
-                    }else{
-                        targetArray.push(parentTag);
-                        var tn = parentTag.tagName;
-                        var index = $( tn ).index( parentTag );
-                        var textContent = window.SMUJSInterface.setWebPageDomObject(index, parentTag.tagName, parentTag.innerText);
-                        // 하이라이팅
-                        parentTag.style.background = 'orange';
-                        parentTag.style.color = 'black';
-                    }
-                } else if(Object.equals(parentTag, targetTag.parentElement.parentElement) && parentCount == 1){   // 리셋
-                    console.log("------------------parentCount3.parentElement;------------------");
-                    var isTarget = targetArray.indexOf(parentTag);
-                    // 스타일 원래대로
-                    parentTag.style.removeProperty('background');
-                    parentTag.style.removeProperty('color');
-                    // 배열에서 삭제
-                    var textContent = window.SMUJSInterface.removeWebPageDomObject(isTarget);
-                    targetArray.splice(isTarget,1);
-                    parentTag = null;
-                    parentCount = 0;
-                } else { // 새로운 부모
-                    console.log("------------------target.parentElement;------------------");
-                    parentTag = targetTag.parentElement.parentElement
+                            // 조부모 태그 추가
+                            parentTag = parentTag.parentElement;
+                            // 배열에 추가
+                            if(parentTag.innerHTML == '&nbsp;'){
+                            }else{
+                                targetArray.push(parentTag);
+                                var tn = parentTag.tagName;
+                                var index = $( tn ).index( parentTag );
+                                var textContent = window.SMUJSInterface.setWebPageDomObject(index, parentTag.tagName, parentTag.innerText);
+                                // 하이라이팅
+                                parentTag.style.background = 'orange';
+                                parentTag.style.color = 'black';
 
-                    // 선택하지 않은 태그라면
-                    // 배열에 추가
-                    if(parentTag.innerHTML == '&nbsp;'){
-                    }else{
-                        targetArray.push(parentTag);
-                        var tn = parentTag.tagName;
-                        var index = $( tn ).index( parentTag );
-                        var textContent = window.SMUJSInterface.setWebPageDomObject(index, parentTag.tagName, parentTag.innerText);
-                        // 하이라이팅
-                        parentTag.style.background = 'pink';
-                        parentTag.style.color = 'black';
-                    }
-                }*/
+                                parentCount++;
+                            }
+                        }
+                    break;
+                    case 2:
+                        console.log("------------------delete parentTag.parentElement;------------------");
+                        var isTarget = targetArray.indexOf(parentTag);
+                        // 스타일 원래대로
+                        parentTag.style.removeProperty('background');
+                        parentTag.style.removeProperty('color');
+                        // 배열에서 삭제
+                        var textContent = window.SMUJSInterface.removeWebPageDomObject(isTarget);
+                        targetArray.splice(isTarget,1);
+
+                        parentTag = null;
+                        parentCount = 0;
+                    break;
+                }
             }
         } else {
             //탭 이벤트로 판단한다.
             //현재 탭 이벤트들에 대한 정보를 업데이트한다.
-            /*console.log("------------------tap------------------");
-            oTapEventTimer = setTimeout(function(){*/
+            console.log("------------------tap------------------");
+            oTapEventTimer = setTimeout(function(){
                 var isTarget = targetArray.indexOf(targetTag);
                 if(isTarget != -1){ // 이미 선택한 태그라면
                     // 스타일 원래대로
@@ -214,6 +209,14 @@ function onEnd(e) {
                     if(targetTag.innerHTML == '&nbsp;'){
                     }else{
                         targetArray.push(targetTag);
+/*                        var temp = document.querySelectorAll(targetTag.tagName);
+                        var tmep2;
+                        for(var i=0; i<temp.length; i++){
+                              if(temp[i].innerText ==  targetTag.innerText){
+                                temp2 = i;
+                              }
+                        }*/
+
                         var tn = targetTag.tagName;
                         var index = $( tn ).index( targetTag );
                         var textContent = window.SMUJSInterface.setWebPageDomObject(index, targetTag.tagName, targetTag.innerText);
@@ -222,7 +225,7 @@ function onEnd(e) {
                         targetTag.style.color = 'black';
                     }
                 }
-/*            }.bind(this), 300);*/
+            }.bind(this), 300);
 
             htClickInfo.sType = "tap";
             htClickInfo.nX = nX;
@@ -281,8 +284,8 @@ function finalizeChoice(){
     }
 
     // 배열 비우기
-/*    parentTag = null;
-    parentCount = 0;*/
+    parentTag = null;
+    parentCount = 0;
     targetArray.splice(0,targetArray.length);
     var textContent = window.SMUJSInterface.clearWebPageDomObject();
 
@@ -355,8 +358,8 @@ function choiceReset(){
      }
 
     // 배열 비우기
-/*    parentTag = null;
-    parentCount = 0;*/
+    parentTag = null;
+    parentCount = 0;
     targetArray.splice(0,targetArray.length);
     var textContent = window.SMUJSInterface.clearWebPageDomObject();
 }
